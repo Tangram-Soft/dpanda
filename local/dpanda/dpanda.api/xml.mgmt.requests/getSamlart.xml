@@ -1,0 +1,8 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:man="http://www.datapower.com/schemas/management">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <man:request domain="default">
+         <man:get-samlart user="" password=""/>
+      </man:request>
+   </soapenv:Body>
+</soapenv:Envelope>
