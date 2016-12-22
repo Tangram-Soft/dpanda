@@ -1,5 +1,6 @@
-# dPanda - DataPower Administration and Development Applications
+# dPanda
 dPanda, pronounced as "The Panda", is a dashboard application that contains a set of complementary services for DataPower administrators and developers.
+dPanda stands for DataPower Administration and Development Applications.
 
 ## Getting Started
 
