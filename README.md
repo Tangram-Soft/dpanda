@@ -32,3 +32,6 @@ $ docker create -it \
   --name idg.dpanda \
   ibmcom/datapower
 ```
+
+You'll later need to create a crypto pair for the https front side handler to work.
+Make sure the CN is "dpanda-gui".
