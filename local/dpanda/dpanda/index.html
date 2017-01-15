@@ -135,8 +135,8 @@
         <div class="right_col" role="main">
           <div class="row tile_count">
             <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-user"></i> Total Connections</span>
-              <div class="count">2500</div>
+              <span class="count_top"><i class="fa fa-user"></i> Active Users</span>
+              <div class="count" id="totalActiveUsers"></div>
             </div>
             <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Filesystem Status</span>
@@ -268,157 +268,178 @@
 
     <!-- Custom Theme Scripts -->
     <script src="build/js/custom.min.js"></script>
+
+    <!-- Active Users count -->
+    <script type="text/javascript">
+      $(function(){
+
+        var dpandaGetActiveUsers = '/dpanda/api/getActiveUsers';
+        $.get(dpandaGetActiveUsers)
+        .fail(function(){
+          //Handle error
+        })
+        .done(function(activeUsersResponse) {
+          console.log(activeUsersResponse);
+          $("#totalActiveUsers").html(activeUsersResponse['totalActiveUsers']);
+        });
+
+      });
+    </script>
+    <!-- SystemUsage graphs -->
     <script type="text/javascript">
 
-  	$(function() {
+    	$(function() {
 
-      var currentLoad = 0;
-      var currentMemory = 0;
-      var currentCpu = 0;
+        var currentLoad = 0;
+        var currentMemory = 0;
+        var currentCpu = 0;
 
-      var loadData = [];
-      var memoryData = [];
-      var cpuData = [];
+        var loadData = [];
+        var memoryData = [];
+        var cpuData = [];
 
-      var totalPoints = 50;
+        var totalPoints = 50;
 
-      function getSystemUsage() {
-        if (loadData.length > 0) {
-          loadData = loadData.slice(1);
+        function getSystemUsage() {
+          if (loadData.length > 0) {
+            loadData = loadData.slice(1);
+          }
+          if (memoryData.length > 0) {
+            memoryData = memoryData.slice(1);
+          }
+          if (cpuData.length > 0) {
+            cpuData = cpuData.slice(1);
+          }
+
+          var dpandaApiGetSystemUsage = '/dpanda/api/getSystemUsageTable';
+
+          $.ajax({
+            type: 'GET',
+            url: dpandaApiGetSystemUsage,
+            dataType: 'json',
+            processData: false,
+            contentType: 'application/json',
+            error: function() {
+              //Handle error
+            },
+            success: function(systemUsageResponse) {
+              //console.log(systemUsageResponse);
+              currentLoad = systemUsageResponse['Load'];
+              currentMemory = systemUsageResponse['Memory'];
+              currentCpu = systemUsageResponse['CPU'];
+            }
+          });
+
+          while (loadData.length < totalPoints) {
+    				loadData.push(currentLoad);
+    			}
+
+          while (memoryData.length < totalPoints) {
+            memoryData.push(currentMemory);
+          }
+
+          while (cpuData.length < totalPoints) {
+            cpuData.push(currentCpu);
+          }
+
+          var graphLoadData = [];
+          for (var i = 0; i < loadData.length; ++i) {
+            graphLoadData.push([i, loadData[i]])
+          }
+
+          var graphMemoryData = [];
+          for (var i = 0; i < memoryData.length; ++i) {
+            graphMemoryData.push([i, memoryData[i]])
+          }
+
+          var graphCpuData = [];
+          for (var i = 0; i < cpuData.length; ++i) {
+            graphCpuData.push([i, cpuData[i]])
+          }
+
+          var res = [
+            {
+              data: graphLoadData,
+              color: "#f44242"
+            },
+            {
+              data: graphMemoryData,
+              color: "#f44242"
+            },
+            {
+              data: graphCpuData,
+              color: "#f44242"
+            }
+          ];
+
+          return res;
         }
-        if (memoryData.length > 0) {
-          memoryData = memoryData.slice(1);
-        }
-        if (cpuData.length > 0) {
-          cpuData = cpuData.slice(1);
-        }
 
-        var dpandaApiGetSystemUsage = '/dpanda/api/getSystemUsageTable';
+    		var updateInterval = 500;
 
-        $.ajax({
-          type: 'GET',
-          url: dpandaApiGetSystemUsage,
-          dataType: 'json',
-          processData: false,
-          contentType: 'application/json',
-          error: function() {
-            //Handle error
+        var plotSystemLoad = $.plot("#systemLoad", [ getSystemUsage()[0] ], {
+    			series: {
+    				shadowSize: 0	// Drawing is faster without shadows
+    			},
+    			yaxis: {
+    				min: 0,
+    				max: 100
+    			},
+    			xaxis: {
+    				show: false
+    			}
+    		});
+
+        var plotSystemMemory = $.plot("#systemMemory", [ getSystemUsage()[1] ], {
+          series: {
+            shadowSize: 0	// Drawing is faster without shadows
           },
-          success: function(systemUsageResponse) {
-            console.log(systemUsageResponse);
-            currentLoad = systemUsageResponse['Load'];
-            currentMemory = systemUsageResponse['Memory'];
-            currentCpu = systemUsageResponse['CPU'];
+          yaxis: {
+            min: 0,
+            max: 100
+          },
+          xaxis: {
+            show: false
           }
         });
 
-        while (loadData.length < totalPoints) {
-  				loadData.push(currentLoad);
-  			}
-
-        while (memoryData.length < totalPoints) {
-          memoryData.push(currentMemory);
-        }
-
-        while (cpuData.length < totalPoints) {
-          cpuData.push(currentCpu);
-        }
-
-        var graphLoadData = [];
-        for (var i = 0; i < loadData.length; ++i) {
-          graphLoadData.push([i, loadData[i]])
-        }
-
-        var graphMemoryData = [];
-        for (var i = 0; i < memoryData.length; ++i) {
-          graphMemoryData.push([i, memoryData[i]])
-        }
-
-        var graphCpuData = [];
-        for (var i = 0; i < cpuData.length; ++i) {
-          graphCpuData.push([i, cpuData[i]])
-        }
-
-        var res = [
-          {
-            data: graphLoadData,
-            color: "#f44242"
+        var plotSystemCpu = $.plot("#systemCpu", [ getSystemUsage()[2] ], {
+          series: {
+            shadowSize: 0	// Drawing is faster without shadows
           },
-          {
-            data: graphMemoryData,
-            color: "#f44242"
+          yaxis: {
+            min: 0,
+            max: 100
           },
-          {
-            data: graphCpuData,
-            color: "#f44242"
+          xaxis: {
+            show: false
           }
-        ];
+        });
 
-        return res;
-      }
+        function updateSystemUsage() {
 
-  		var updateInterval = 5000;
+          var systemUsageTable = getSystemUsage();
+    			plotSystemLoad.setData([systemUsageTable[0]]);
+    			plotSystemLoad.draw();
 
-      var plotSystemLoad = $.plot("#systemLoad", [ getSystemUsage()[0] ], {
-  			series: {
-  				shadowSize: 0	// Drawing is faster without shadows
-  			},
-  			yaxis: {
-  				min: 0,
-  				max: 100
-  			},
-  			xaxis: {
-  				show: false
-  			}
-  		});
+          plotSystemMemory.setData([systemUsageTable[1]]);
+          plotSystemMemory.draw();
 
-      var plotSystemMemory = $.plot("#systemMemory", [ getSystemUsage()[1] ], {
-        series: {
-          shadowSize: 0	// Drawing is faster without shadows
-        },
-        yaxis: {
-          min: 0,
-          max: 100
-        },
-        xaxis: {
-          show: false
-        }
-      });
+          plotSystemCpu.setData([systemUsageTable[2]]);
+          plotSystemCpu.draw();
 
-      var plotSystemCpu = $.plot("#systemCpu", [ getSystemUsage()[2] ], {
-        series: {
-          shadowSize: 0	// Drawing is faster without shadows
-        },
-        yaxis: {
-          min: 0,
-          max: 100
-        },
-        xaxis: {
-          show: false
-        }
-      });
+          setTimeout(updateSystemUsage, updateInterval);
+    		}
 
-      function updateSystemUsage() {
+    		updateSystemUsage();
 
-        var systemUsageTable = getSystemUsage();
-  			plotSystemLoad.setData([systemUsageTable[0]]);
-  			plotSystemLoad.draw();
-
-        plotSystemMemory.setData([systemUsageTable[1]]);
-        plotSystemMemory.draw();
-
-        plotSystemCpu.setData([systemUsageTable[2]]);
-        plotSystemCpu.draw();
-
-        setTimeout(updateSystemUsage, updateInterval);
-  		}
-
-  		updateSystemUsage();
-
-  	});
+    	});
 
   	</script>
+
+    <!-- Filesystem doughnut -->
     <script>
+    /*
       $(document).ready(function(){
         var options = {
           legend: false,
@@ -463,6 +484,7 @@
           options: options
         });
       });
+      */
     </script>
 
   </body>
