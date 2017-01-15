@@ -4,59 +4,33 @@
                 xmlns:func="http://exslt.org/functions"
                 xmlns:list="http://www.example.com/list"
                 xmlns:sd="Tangram-soft.co.il"
-                xmlns:xsd="Tangram-soft.co.il"
+                xmlns:xsd="Tangram-soft.שco.il"
                 xmlns:str="http://exslt.org/strings"
                 extension-element-prefixes="dp">
 
    <xsl:output method="xml" encoding="utf-8" indent="yes"/>
-        <!--@@AR Functions to extract the variables from the request-->
-        <func:function name="sd:getWebServiceUrl">
-            <xsl:param name="getURL"/>
-            <func:result select="substring-before(substring-after($getURL,'address='),';domain=')"/>
-        </func:function>
-
-        <func:function name="sd:getTarget">
-            <xsl:param name="getURL"/>
-            <func:result select="substring-after($getURL,'location=')"/>
-        </func:function>
-
-        <func:function name="sd:getDomain">
-            <xsl:param name="getURL"/>
-            <func:result select="substring-before(substring-after($getURL,'domain='),';filename=')"/>
-        </func:function>
-
-        <func:function name="sd:getFileName">
-            <xsl:param name="getURL"/>
-            <func:result select="substring-before(substring-after($getURL,'filename='),';location=')"/>
-        </func:function>
-
+        
+        <!--TODO: 
+        *************************************************************************************************
+        1. Deal with xsd's with relative url's
+        2. Add SOMA username:password as a parameter.
+        3.
+        *************************************************************************************************
+        -->
         <!--=============================================================================================-->
 
     <xsl:template match="/">
         <xsl:message dp:priority="debug">Main Template</xsl:message>
 
-        <!--
-        <xsl:variable name="URL" select="dp:original-http-url()"/>
-        <xsl:message>@@AR webService: <xsl:value-of select="$URL"/></xsl:message>
-        <xsl:variable name="webServiceUrl" select="sd:getWebServiceUrl($URL)"/>
-        <xsl:message>@@IM webService: <xsl:value-of select="$webServiceUrl"/></xsl:message>
-        <xsl:variable name="domainName" select="sd:getDomain($URL)"/>
-        <xsl:message>@@IM fileName: <xsl:value-of select="$domainName"/></xsl:message>
-        <xsl:variable name="folderName" select="sd:getTarget($URL)"/>
-        <xsl:message>@@IM fileName: <xsl:value-of select="$folderName"/></xsl:message>
-        <xsl:variable name="fileName" select="sd:getFileName($URL)"/>
-        <xsl:message>@@IM fileName: <xsl:value-of select="$fileName"/></xsl:message>
-        -->
-        <xsl:variable name="wsdlUrl" select="//args/arg[@name='wsdlUrl']/text()"/>
-        <xsl:variable name="domain" select="//args/arg[@name='domain']/text()"/>
-        <xsl:variable name="filename" select="//args/arg[@name='filename']/text()"/>
-        <xsl:variable name="target" select="//args/arg[@name='target']/text()"/>
+        <xsl:variable name="webServiceUrl" select="//args/arg[@name='wsdlUrl']/text()"/>
+        <xsl:variable name="domainName" select="//args/arg[@name='domain']/text()"/>
+        <xsl:variable name="fileName" select="//args/arg[@name='filename']/text()"/>
+        <xsl:variable name="folderName" select="//args/arg[@name='target']/text()"/>
 
-        <xsl:variable name="webServiceUrl" select="$wsdlUrl"/>
-        <xsl:variable name="domainName" select="$domain"/>
-        <xsl:variable name="folderName" select="$filename"/>
-        <xsl:variable name="fileName" select="$target"/>
-
+        <xsl:message>@@AR Webservice URL: <xsl:value-of select="$webServiceUrl"/></xsl:message>
+        <xsl:message>@@AR Domain: <xsl:value-of select="$domainName"/></xsl:message>
+        <xsl:message>@@AR Folder: <xsl:value-of select="$folderName"/></xsl:message>
+        <xsl:message>@@AR Filename: <xsl:value-of select="$fileName"/></xsl:message>
 
         <!--Download the WSDL from the network-->
         <xsl:call-template name="downloadFile">
@@ -66,10 +40,6 @@
             <xsl:with-param name="fileName"><xsl:value-of select="$fileName"/></xsl:with-param>
             <xsl:with-param name="encodedFileContent"><xsl:value-of select="$encodedFileContent"/></xsl:with-param>
         </xsl:call-template>
-
-
-        <xsl:variable name="cutted" select="str:tokenize('2001-06-03T11:40:23', '-T:')"/>
-        <xsl:message>value of Tokenize: <xsl:value-of select="$cutted"/></xsl:message>
 
         <xsl:for-each select="str:tokenize(string(.), ' ')">
             <xsl:message>
@@ -89,7 +59,7 @@
         <xsl:param name="encodedFileContent" />
 
         <xsl:message dp:priority="debug">uploadFile Template</xsl:message>
-        <xsl:variable name="pwd64" select="dp:encode('admin:admin','base-64')"/>
+        <xsl:variable name="pwd64" select="dp:encode('dpanda:dpanda','base-64')"/>
         <xsl:variable name="basicAuth" select="concat('Basic ',$pwd64)"/>
 
         <!-- Creating the Headers for the SOMA request -->
@@ -98,8 +68,9 @@
             <header name="Authorization"><xsl:value-of select="$basicAuth"/></header>
         </xsl:variable>
 
+        <!--ssl-proxy="dpanda.main.server.crypto.profile" -->
         <xsl:message>
-        <dp:url-open target="https://eth0_ipv4_1:5550/service/mgmt/current" response="xml" ssl-proxy="client:whooper.ssl.client.profile" http-method="post" http-headers="$somaRequestHeaders" >
+        <dp:url-open target="https://dpanda.xml.mgmt:5550/service/mgmt/current" response="xml" http-method="post" http-headers="$somaRequestHeaders" >
             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:man="http://www.datapower.com/schemas/management">
                 <soapenv:Header/>
                   <soapenv:Body>
@@ -144,11 +115,12 @@
             <parameter name="fileName"><xsl:value-of select="$fileName"/></parameter>
         </xsl:variable>
 
+        <!--Context variable for wsdl filename to be used in the changeSchemaLocationAttribute.xsl transform-->
         <dp:set-variable name="'var://context/getWsdlFiles/currentFileName'" value="$fileName"/>
 
         <!-- TODO: We should pass the fileName as a parameter to the transform function instead of using a context variable -->
         <xsl:variable name="parsedFileContentTransformed">
-            <dp:serialize select="dp:transform('local:///dev/changeSchemaLocationAttribute.xsl',$parsedFileContent)"/>
+            <dp:serialize select="dp:transform('local:///dpanda.api/changeSchemaLocationAttribute.xsl',$parsedFileContent)"/>
         </xsl:variable>
 
         <xsl:variable name="encodedFileContentTransformed" select="dp:encode($parsedFileContentTransformed,'base-64')"/>
@@ -182,19 +154,12 @@
         <xsl:param name="fileName"/>
 
         <xsl:for-each select="$source/*[local-name()='definitions']/*[local-name()='types']/*[local-name()='schema']/*[local-name()='import']|$source/*[local-name()='schema']/*[local-name()='include']">
-            <xsl:message>For each5<xsl:copy-of select="."/></xsl:message>
-            <xsl:message>For each7<xsl:value-of select="."/></xsl:message>
-
             <xsl:call-template name="downloadFile">
                 <xsl:with-param name="webServiceUrl"><xsl:value-of select="./@*[local-name()='schemaLocation']"/></xsl:with-param>
                 <xsl:with-param name="domainName"><xsl:value-of select="$domainName"/></xsl:with-param>
                 <xsl:with-param name="folderName"><xsl:value-of select="$folderName"/></xsl:with-param>
                 <xsl:with-param name="fileName"><xsl:value-of select="concat($fileName,'_xsd.',str:tokenize(./@*[local-name()='schemaLocation'],'=')[last()])"/></xsl:with-param>
             </xsl:call-template>
-
-            <xsl:attribute name="schemaLocation" select="./@*[local-name()='schemaLocation']">
-                <xsl:value-of select="'alon'"/>
-            </xsl:attribute>
         </xsl:for-each>
 
         <!--
