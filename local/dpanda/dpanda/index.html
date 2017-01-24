@@ -31,7 +31,7 @@
   <body class="nav-md">
     <div class="container body">
       <div class="main_container">
-        <div class="col-md-3 left_col">
+        <div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
             <div class="clearfix"></div>
             <!-- sidebar menu -->
@@ -134,24 +134,6 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="row tile_count">
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-user"></i> Active Users</span>
-              <div class="count" id="totalActiveUsers"></div>
-            </div>
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-user"></i> Filesystem Status</span>
-              <div class="count">2500</div>
-            </div>
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-clock-o"></i> Connected Users</span>
-              <div class="count">123.50</div>
-            </div>
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-user"></i> Firmware Details</span>
-              <div class="count">2,500</div>
-            </div>
-          </div>
-          <div class="row tile_count">
             <div class="row">
               <div class="">
                 <div class="col-md-4 col-sm-4 col-xs-12">
@@ -212,6 +194,32 @@
                   </div>
                 </div>
               </div>
+              <div class="row tile_count">
+                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+                  <span class="count_top"><i class="fa fa-user"></i> Active Users</span>
+                  <div class="count" id="totalActiveUsers"></div>
+                </div>
+                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+                  <span class="count_top"><i class="fa fa-user"></i> Filesystem Status</span>
+                  <div class="progress progress_sm" style="width: 76%;">
+                    <div class="progress-bar bg-green" id="encryptedFilesystemStatus" role="progressbar"></div>
+                  </div>
+                  <div class="progress progress_sm" style="width: 76%;">
+                    <div class="progress-bar bg-green" id="temporaryFilesystemStatus" role="progressbar"></div>
+                  </div>
+                  <div class="progress progress_sm" style="width: 76%;">
+                    <div class="progress-bar bg-green" id="internalFilesystemStatus" role="progressbar"></div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+                  <span class="count_top"><i class="fa fa-clock-o"></i> Connected Users</span>
+                  <div class="count">123.50</div>
+                </div>
+                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+                  <span class="count_top"><i class="fa fa-user"></i> Firmware Details</span>
+                  <div class="count">2,500</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -269,17 +277,35 @@
     <!-- Custom Theme Scripts -->
     <script src="build/js/custom.min.js"></script>
 
+    <!-- Filesystem Status -->
+    <script type="text/javascript">
+      $(function(){
+
+        var dpandaGetFilesystemStatus = '/dpanda/api/status/filesystemStatus';
+        $.get(dpandaGetFilesystemStatus)
+        .fail(function(){
+          //Handle error
+        })
+        .done(function(filesystemStatusResponse) {
+          console.log('width:' + Math.round((filesystemStatusResponse['totalInternal'] - filesystemStatusResponse['freeInternal'])*100/filesystemStatusResponse['totalInternal']) + '%');
+          $("#encryptedFilesystemStatus").width(Math.round((filesystemStatusResponse['totalEncrypted'] - filesystemStatusResponse['freeEncrypted'])*100/filesystemStatusResponse['totalEncrypted']));
+          $("#temporaryFilesystemStatus").width(Math.round((filesystemStatusResponse['totalTemporary'] - filesystemStatusResponse['freeTemporary'])*100/filesystemStatusResponse['totalTemporary']));
+          $("#internalFilesystemStatus").width(Math.round((filesystemStatusResponse['totalInternal'] - filesystemStatusResponse['freeInternal'])*100/filesystemStatusResponse['totalInternal']));
+        });
+
+      });
+    </script>
+
     <!-- Active Users count -->
     <script type="text/javascript">
       $(function(){
 
-        var dpandaGetActiveUsers = '/dpanda/api/getActiveUsers';
+        var dpandaGetActiveUsers = '/dpanda/api/status/activeUsers';
         $.get(dpandaGetActiveUsers)
         .fail(function(){
           //Handle error
         })
         .done(function(activeUsersResponse) {
-          console.log(activeUsersResponse);
           $("#totalActiveUsers").html(activeUsersResponse['totalActiveUsers']);
         });
 
@@ -311,7 +337,7 @@
             cpuData = cpuData.slice(1);
           }
 
-          var dpandaApiGetSystemUsage = '/dpanda/api/getSystemUsageTable';
+          var dpandaApiGetSystemUsage = '/dpanda/api/status/systemUsageTable';
 
           $.ajax({
             type: 'GET',
@@ -436,57 +462,6 @@
     	});
 
   	</script>
-
-    <!-- Filesystem doughnut -->
-    <script>
-    /*
-      $(document).ready(function(){
-        var options = {
-          legend: false,
-          responsive: false
-        };
-
-        new Chart(document.getElementById("tcpSummary"), {
-          type: 'doughnut',
-          tooltipFillColor: "rgba(51, 51, 51, 0.55)",
-          data: {
-            labels: [
-              "established",
-              "syn_sent",
-              "syn_received",
-              "fin_wait_1",
-              "fin_wait_2",
-              "time_wait",
-              "closed",
-              "close_wait",
-              "last_ack",
-              "listen",
-              "closing"
-            ],
-            datasets: [{
-              data: [15, 20, 30, 10, 30 , 100, 30 ,20, 14, 11, 22],
-              backgroundColor: [
-                "#BDC3C7",
-                "#9B59B6",
-                "#E74C3C",
-                "#26B99A",
-                "#3498DB"
-              ],
-              hoverBackgroundColor: [
-                "#CFD4D8",
-                "#B370CF",
-                "#E95E4F",
-                "#36CAAB",
-                "#49A9EA"
-              ]
-            }]
-          },
-          options: options
-        });
-      });
-      */
-    </script>
-
   </body>
   </html>
 </html>
