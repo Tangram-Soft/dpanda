@@ -281,7 +281,7 @@
     <script type="text/javascript">
       $(function(){
 
-        var dpandaGetFilesystemStatus = '/dpanda/api/status/filesystemStatus';
+        var dpandaGetFilesystemStatus = '/dpanda/api/status/filesystem';
         $.get(dpandaGetFilesystemStatus)
         .fail(function(){
           //Handle error
@@ -337,7 +337,7 @@
             cpuData = cpuData.slice(1);
           }
 
-          var dpandaApiGetSystemUsage = '/dpanda/api/status/systemUsageTable';
+          var dpandaApiGetSystemUsage = '/dpanda/api/status/systemUsage';
 
           $.ajax({
             type: 'GET',
