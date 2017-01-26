@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>dPanda | Index</title>
+    <title>dPanda</title>
 
     <!-- Bootstrap -->
     <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,50 +25,37 @@
     <link href="vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link href="build/css/custom.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
   </head>
 
   <body class="nav-md">
     <div class="container body">
       <div class="main_container">
-        <div class="col-md-3 left_col menu_fixed">
+        <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
-            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile" style="height:100px">
+              <div class="profile_info">
+                <h2>Hi, admin</h2>
+                <h6>How can we assist?</h6>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <ul class="nav side-menu">
-                  <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+                  <li class="active"><a><i class="fa fa-home"></i> Home </a></li>
                 </ul>
               </div>
               <div class="menu_section">
                 <h3>Administration</h3>
                 <ul class="nav side-menu">
-                  <li><a><i class="fa fa-wifi"></i>Network<span class="fa fa-chevron-down"></span></a>
+                  <li><a><i class="fa fa-desktop"></i> Network <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="vipControl.html">VIP Control</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-edit"></i>SOAP Web Services<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="importWsdl.html">Import WSDLs</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-edit"></i>RESTful Services<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="importWsdl.html">Import Swagger</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-clock-o"></i>Backup<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="importWsdl.html">Applicative Backup</a></li>
-                      <li><a href="importWsdl.html">Secure Backup</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-code-fork"></i>Sync<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="importWsdl.html">Sync Settings</a></li>
-                      <li><a href="importWsdl.html">Sync Points Control</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -76,24 +63,10 @@
               <div class="menu_section">
                 <h3>Development</h3>
                 <ul class="nav side-menu">
-                  <li><a><i class="fa fa-paper-plane"></i> Web IDE</span></a>
-                  </li>
-                  <li><a><i class="fa fa-wrench"></i>Tools<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="importWsdl.html">XPath Validator</a></li>
-                      <li><a href="importWsdl.html">XPath Generator</a></li>
-                      <li><a href="importWsdl.html">Base64 Decoder/Encoder</a></li>
-                    </ul>
-                  </li>
+                  <li><a href="ide.html"><i class="fa fa-bug"></i> Web IDE</a></li>
                 </ul>
               </div>
-              <div class="menu_section">
-                <h3>Settings</h3>
-                <ul class="nav side-menu">
-                  <li><a><i class="fa fa-cogs"></i>Settings</span></a>
-                  </li>
-                </ul>
-              </div>
+              <div class="menu_section_fix"></div>
             </div>
             <!-- /sidebar menu -->
           </div>
@@ -109,9 +82,11 @@
               <div class="nav nav_title">
                 <a href="index.html" class="site_title"><img src="images/dpanda-navbar.gif" style="height: 40px; width:auto; padding-right: 3px;"></img><span>dPanda</span></a>
               </div>
-              <div class="nav navbar-nav navbar-right" style="height:57px; text-align:center; line-height:57px;">
-                <span id="clock" style="vertical-align:middle; display: inline-block;line-height:normal;">test</span>
-              </div>
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <span id="clock"/>
+                </li>
+              </ul>
             </nav>
           </div>
         </div>
@@ -119,102 +94,92 @@
 
         <!-- page content -->
         <div class="right_col" role="main">
-          <div class="row tile_count">
-            <div class="row">
-              <div class="">
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                  <div class="x_panel">
-                    <div class="x_title">
-                      <h2>CPU</h2>
-                      <ul class="nav navbar-right panel_toolbox">
-                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                        <li class="dropdown">
-                        </li>
-                        <li><a class="close-link"><i class="fa fa-close"></i></a>
-                        </li>
-                      </ul>
-                      <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-              		    <div id="systemCpu" class="line-chart-container"></div>
-                    </div>
-                  </div>
+
+          <!-- page content -->
+          <div class="row">
+            <div class="col-md-6 col-sm-4 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>CPU</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
                 </div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                  <div class="x_panel">
-                    <div class="x_title">
-                      <h2>Memory</h2>
-                      <ul class="nav navbar-right panel_toolbox">
-                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                        <li class="dropdown">
-                        </li>
-                        <li><a class="close-link"><i class="fa fa-close"></i></a>
-                        </li>
-                      </ul>
-                      <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-              		    <div id="systemMemory" class="line-chart-container"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                  <div class="x_panel">
-                    <div class="x_title">
-                      <h2>Load</h2>
-                      <ul class="nav navbar-right panel_toolbox">
-                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                        <li class="dropdown">
-                        </li>
-                        <li><a class="close-link"><i class="fa fa-close"></i></a>
-                        </li>
-                      </ul>
-                      <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-                      <div id="systemLoad" class="line-chart-container"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row tile_count">
-                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-                  <span class="count_top"><i class="fa fa-user"></i> Active Users</span>
-                  <div class="count" id="totalActiveUsers"></div>
-                </div>
-                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-                  <span class="count_top"><i class="fa fa-user"></i> Filesystem Status</span>
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" id="encryptedFilesystemStatus" role="progressbar"></div>
-                  </div>
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" id="temporaryFilesystemStatus" role="progressbar"></div>
-                  </div>
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" id="internalFilesystemStatus" role="progressbar"></div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-                  <span class="count_top"><i class="fa fa-clock-o"></i> Connected Users</span>
-                  <div class="count">123.50</div>
-                </div>
-                <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-                  <span class="count_top"><i class="fa fa-user"></i> Firmware Details</span>
-                  <div class="count">2,500</div>
+                <div class="x_content">
+                  <div id="systemCpu" class="line-chart-container"></div>
                 </div>
               </div>
             </div>
+            <div class="col-md-6 col-sm-4 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Memory</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div id="systemMemory" class="line-chart-container"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-4 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Load</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                    <li class="dropdown"></li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a></li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div id="systemLoad" class="line-chart-container"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-3 col-xs-6 tile">
+              <span>Filesystem</span>
+              <div class="progress progress_sm" style="width: 76%;">
+                <div class="progress-bar bg-green" id="encryptedFilesystemStatus" role="progressbar"></div>
+              </div>
+              <div class="progress progress_sm" style="width: 76%;">
+                <div class="progress-bar bg-green" id="temporaryFilesystemStatus" role="progressbar"></div>
+              </div>
+              <div class="progress progress_sm" style="width: 76%;">
+                <div class="progress-bar bg-green" id="internalFilesystemStatus" role="progressbar"></div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6 tile">
+              <span>Total Connections</span>
+              <h2>231,809</h2>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6 tile">
+              <span>Active Users</span>
+              <h2><span id="totalActiveUsers"/></h2>
+            </div>
           </div>
+          <br />
         </div>
         <!-- /page content -->
 
         <!-- footer content -->
         <footer>
           <div class="pull-right">
-            Tangram's dPanda - DataPower Administration and Development Applications</a>
+            dPanda - DataPower Administration and Development Applications by <a href="http://www.tangram-soft.co.il/">Tangram-Soft</a>
           </div>
           <div class="clearfix"></div>
         </footer>
@@ -261,7 +226,7 @@
     <script src="vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
     <!-- Custom Theme Scripts -->
-    <script src="build/js/custom.min.js"></script>
+    <script src="js/custom.js"></script>
 
     <!-- Filesystem Status -->
     <script type="text/javascript">
@@ -300,7 +265,7 @@
     <!-- SystemUsage graphs -->
     <script type="text/javascript">
 
-    	$(function() {
+      $(function() {
 
         var currentLoad = 0;
         var currentMemory = 0;
@@ -343,8 +308,8 @@
           });
 
           while (loadData.length < totalPoints) {
-    				loadData.push(currentLoad);
-    			}
+            loadData.push(currentLoad);
+          }
 
           while (memoryData.length < totalPoints) {
             memoryData.push(currentMemory);
@@ -387,20 +352,20 @@
           return res;
         }
 
-    		var updateInterval = 500;
+        var updateInterval = 500;
 
         var plotSystemLoad = $.plot("#systemLoad", [ getSystemUsage()[0] ], {
-    			series: {
-    				shadowSize: 0	// Drawing is faster without shadows
-    			},
-    			yaxis: {
-    				min: 0,
-    				max: 100
-    			},
-    			xaxis: {
-    				show: false
-    			}
-    		});
+          series: {
+            shadowSize: 0	// Drawing is faster without shadows
+          },
+          yaxis: {
+            min: 0,
+            max: 100
+          },
+          xaxis: {
+            show: false
+          }
+        });
 
         var plotSystemMemory = $.plot("#systemMemory", [ getSystemUsage()[1] ], {
           series: {
@@ -431,8 +396,8 @@
         function updateSystemUsage() {
 
           var systemUsageTable = getSystemUsage();
-    			plotSystemLoad.setData([systemUsageTable[0]]);
-    			plotSystemLoad.draw();
+          plotSystemLoad.setData([systemUsageTable[0]]);
+          plotSystemLoad.draw();
 
           plotSystemMemory.setData([systemUsageTable[1]]);
           plotSystemMemory.draw();
@@ -441,13 +406,13 @@
           plotSystemCpu.draw();
 
           setTimeout(updateSystemUsage, updateInterval);
-    		}
+        }
 
-    		updateSystemUsage();
+        updateSystemUsage();
 
-    	});
+      });
 
-  	</script>
+    </script>
 
     <script type="text/javascript">
       var updateTime;
@@ -487,7 +452,4 @@
       $(initFunc);
     </script>
   </body>
-  </html>
-</html>
-
 </html>
