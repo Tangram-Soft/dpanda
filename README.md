@@ -33,5 +33,9 @@ $ docker create -it \
   ibmcom/datapower
 ```
 
-You'll later need to create a crypto pair for the https front side handler to work.
-Make sure the CN is "dpanda-gui".
+You'll later need to:
+Create a crypto pair for the https front side handler to work. Make sure the CN is "dpanda-gui".
+
+Login to the gui as user dpanda (pw: dpanda) and change its password to dpanda again.
+
+Make sure the host alias points to the correct IP address.
