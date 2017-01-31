@@ -7,7 +7,7 @@
   <xsl:param name="dpconfig:dpandaApiBackend" />
   <dp:param name="dpconfig:dpandaApiBackend" required="true">
     <display>API Backend</display>
-    <default>http://dpanda.localhost:1081</default>
+    <default>http://dpanda.localhost:65011</default>
   </dp:param>
 
   <xsl:template match="/">

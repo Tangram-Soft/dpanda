@@ -1,0 +1,8 @@
+<dpanda-configuration>
+  <Devices>
+    <AppliancesToMonitor>
+      <Appliance id="1" Host-name="idg.dpanda" Host-ip="127.0.0.1" api-port="65011"/>
+    </AppliancesToMonitor>
+  </Devices>
+  <Features/>
+</dpanda-configuration>
