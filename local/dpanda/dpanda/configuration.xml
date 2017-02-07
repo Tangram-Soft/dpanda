@@ -8,7 +8,7 @@
     <BackhandMonitor>
       <StaticTargets>
         <!--RemoteTarget domain="domainName" name="objectName" class="objectClass" host="ip/hostName" port="port"/-->
-        <RemoteTarget domain="Guy" name="panda" class="proxy" host="120.21.21.12" port="1111"/>
+        <RemoteTarget domain="dpanda" name="panda" class="proxy" host="dpanda.xml.mgmt " port="5550"/>
       </StaticTargets>
       <ServiceTypes>
         <serviceType name="MultiProtocolGateway" monitor="true"/>

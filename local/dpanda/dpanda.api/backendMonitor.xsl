@@ -4,10 +4,10 @@
 *. filter the target list - remove identical elements - DONE!
 *.Remove Xml Decleration - DONE!
 *.adding object name to target element. - DONE!
-*.add user config backhand list - DONE!
-*.create invalid backhands (Loopback,local) -DONE!
+*.add user config backend list - DONE!
+*.create invalid backends (Loopback,local) -DONE!
 *.handle Load BalancerGroup - DONE!
-*handle FTP backhand
+*handle FTP backend
 
 -->
 
@@ -176,25 +176,25 @@
          </xsl:for-each>
        </domainList>
      </xsl:variable>
-     <xsl:variable name="backhandTargets">
-      <BackhandTargets>
+     <xsl:variable name="backendTargets">
+      <BackendTargets>
        <xsl:for-each select="exslt:node-set($domainList)/domainList/appDomain">
          <xsl:variable name="currentDomain" select="./text()"/>
          <xsl:variable name="handleLoadBalancerGroup" select="dpa:handleLBG($currentDomain)"/>
          <xsl:for-each select="document('local://dpanda/configuration.xml')//ServiceTypes/serviceType[@monitor='true']/@name">
-          <xsl:variable name="result" select="dpa:retriveBackhandHost($currentDomain, .)"/>
+          <xsl:variable name="result" select="dpa:retriveBackendHost($currentDomain, .)"/>
             <xsl:copy-of select="$result"/>
         </xsl:for-each>
        </xsl:for-each>
        <xsl:for-each select="document('local://dpanda/configuration.xml')//StaticTargets/RemoteTarget">
          <xsl:copy-of select="."/>
        </xsl:for-each>
-      </BackhandTargets>
+      </BackendTargets>
      </xsl:variable>
-     <xsl:variable name='setFile' select="dpa:setFile('local://dpanda/dpanda.api/backhandTargets.xml', $backhandTargets)"/>
+     <xsl:variable name='setFile' select="dpa:setFile('local://dpanda/dpanda.api/backendTargets.xml', $backendTargets)"/>
   </func:function>
 
-  <func:function name="dpa:retriveBackhandHost">
+  <func:function name="dpa:retriveBackendHost">
     <xsl:param name="domainName"/>
     <xsl:param name="className"/>
     <xsl:choose>
@@ -305,6 +305,6 @@
 
   <xsl:template match="/">
     <xsl:variable name="createIllegalHost" select="dpa:illegalHosts()"/>
-    <xsl:variable name="setBackhandTargets" select="dpa:createTargetList()"/>
+    <xsl:variable name="setBackendTargets" select="dpa:createTargetList()"/>
   </xsl:template>
 </xsl:stylesheet>

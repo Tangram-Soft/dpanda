@@ -71,7 +71,7 @@
     <xsl:variable name="healthCheckResult" select="dpa:doActionRequest($remoteTarget/@domain, $tcpConnTest)"/>
     <xsl:variable name="linkStatus">
       <xsl:choose>
-        <xsl:when test="$healthCheckResult//*[name()='dp:result']/text()">
+        <xsl:when test="contains($healthCheckResult//*[name()='dp:result']/text(), 'OK')">
           <xsl:value-of select="'up'"/>
         </xsl:when>
         <xsl:otherwise>
@@ -92,8 +92,8 @@
   </func:function>
 
   <xsl:template match="/">
-    <xsl:variable name="remoteBackhands">
-      <xsl:copy-of select="document('local://dpanda.api/backhandTargets.xml')"/>
+    <xsl:variable name="remoteBackends">
+      <xsl:copy-of select="document('local://dpanda.api/backendTargets.xml')"/>
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="contains(dp:variable('var://service/URI'), 'remotetarget')">
@@ -104,8 +104,8 @@
           <xsl:text>{"error":"invalid remote target"}</xsl:text>
         </xsl:variable>
         <xsl:choose>
-          <xsl:when test="$remoteBackhands//RemoteTarget[@name=$serviceName][@domain=$domainName]">
-            <xsl:value-of select="dpa:tcpConnctionTest($remoteBackhands//RemoteTarget[@name=$serviceName][@domain=$domainName])"/>
+          <xsl:when test="$remoteBackends//RemoteTarget[@name=$serviceName][@domain=$domainName]">
+            <xsl:value-of select="dpa:tcpConnctionTest($remoteBackends//RemoteTarget[@name=$serviceName][@domain=$domainName])"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$invalidRemote"/>
@@ -116,7 +116,7 @@
         <xsl:variable name="healthCheckResult">
           <xsl:text>{</xsl:text>
           <xsl:text>"RemoteHostStatus": [</xsl:text>
-          <xsl:for-each select="$remoteBackhands//RemoteTarget">
+          <xsl:for-each select="$remoteBackends//RemoteTarget">
             <xsl:value-of select="dpa:tcpConnctionTest(.)"/>
             <xsl:if test="position() != last()">
               <xsl:text>,</xsl:text>
@@ -124,7 +124,7 @@
           </xsl:for-each>
           <xsl:text>]}</xsl:text>
         </xsl:variable>
-        <xsl:value-of select="dpa:setFile('local://dpanda/dpanda.api/remotesBackhandsStatus.txt', $healthCheckResult)"/>
+        <xsl:value-of select="dpa:setFile('local://dpanda/dpanda.api/remotesBackendsStatus.txt', $healthCheckResult)"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
