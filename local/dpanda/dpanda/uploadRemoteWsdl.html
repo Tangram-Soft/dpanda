@@ -49,12 +49,17 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <ul class="nav side-menu">
-                  <li class="active"><a><i class="fa fa-home"></i> Home </a></li>
+                  <li><a href="index.html"><i class="fa fa-home"></i> Home </a></li>
                 </ul>
               </div>
               <div class="menu_section">
                 <h3>Administration</h3>
                 <ul class="nav side-menu">
+                  <li><a><i class="fa fa-desktop"></i> Services <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="uploadRemoteWsdl.html">Upload Remote WSDL</a></li>
+                    </ul>
+                  </li>
                   <li><a><i class="fa fa-desktop"></i> Network <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="vipControl.html">VIP Control</a></li>
@@ -110,16 +115,15 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Domain</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <select  id="domainListOptions" class="form-control">
-
+                  <select required="required" id="domainListOptions" class="form-control">
+                    <option selected disabled/>
                   </select>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">File Location</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <select class="form-control">
-
+                  <select required="required" id="filestoreListOptions" class="form-control">
                   </select>
                 </div>
               </div>
@@ -174,6 +178,45 @@
     <script src="vendors/iCheck/icheck.min.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="js/custom.js"></script>
+
+    <script type="text/javascript">
+      function appendSubdirs(subdirsObject,level) {
+        var levelIndent = '';
+        for (var i = 0; i < level; i++) {
+          levelIndent = levelIndent.concat('&nbsp;&nbsp;');
+        }
+
+        for (var i = 0; i < subdirsObject.length; i++) {
+          $("#filestoreListOptions").append( $("<option>")
+            .val(subdirsObject[i]['path'])
+            .html(levelIndent.concat(subdirsObject[i]['directory']))
+          );
+          if (subdirsObject[i]['subdirs']) {
+            appendSubdirs(subdirsObject[i]['subdirs'],level + 1);
+          }
+
+        };
+      };
+
+
+      $("#domainListOptions").change(function() {
+        var dpandaApiFilestoreList = "/dpanda/api/filestore?domain=";
+        dpandaApiFilestoreList = dpandaApiFilestoreList.concat($("#domainListOptions option:selected").text());
+        $.get(dpandaApiFilestoreList)
+        .fail(function(){
+          //Handle error
+        })
+        .done(function(getFilestoreListResponse) {
+          $("#filestoreListOptions").append( $("<option>")
+            .val(getFilestoreListResponse['path'])
+            .html(getFilestoreListResponse['directory'])
+          );
+          appendSubdirs(getFilestoreListResponse['subdirs'],1);
+        });
+      });
+
+    </script>
+
     <script type="text/javascript">
       var dpandaApiDomainConfig = "/dpanda/api/config/domain";
       $(function() {
@@ -190,7 +233,6 @@
             };
           });
       });
-
     </script>
 
     <script type="text/javascript">
