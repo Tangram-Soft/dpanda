@@ -1,0 +1,1 @@
+<BackendTargets><RemoteTarget domain="dpanda" name="panda" class="proxy" host="dpanda.xml.mgmt " port="5550"/></BackendTargets>

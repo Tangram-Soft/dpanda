@@ -1,0 +1,24 @@
+<dpanda-configuration>
+  <Devices>
+    <AppliancesToMonitor>
+      <Appliance id="1" Host-name="idg.dpanda" Host-ip="127.0.0.1" api-port="65011"/>
+    </AppliancesToMonitor>
+  </Devices>
+  <Features>
+    <BackhandMonitor>
+      <StaticTargets>
+        <!--RemoteTarget domain="domainName" name="objectName" class="objectClass" host="ip/hostName" port="port"/-->
+        <RemoteTarget domain="dpanda" name="panda" class="proxy" host="dpanda.xml.mgmt " port="5550"/>
+      </StaticTargets>
+      <ServiceTypes>
+        <serviceType name="MultiProtocolGateway" monitor="true"/>
+        <serviceType name="WebServiceProxy" monitor="true"/>
+        <serviceType name="XMLFirewallService" monitor="true"/>
+        <serviceType name="MQQM" monitor="true"/>
+      </ServiceTypes>
+      <ExcludedDomains>
+        <Domain name="default"/>
+      </ExcludedDomains>
+    </BackhandMonitor>
+  </Features>
+</dpanda-configuration>
