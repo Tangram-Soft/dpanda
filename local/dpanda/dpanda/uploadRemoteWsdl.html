@@ -110,7 +110,7 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Domain</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <select class="form-control">
+                  <select  id="domainListOptions" class="form-control">
 
                   </select>
                 </div>
@@ -174,6 +174,24 @@
     <script src="vendors/iCheck/icheck.min.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="js/custom.js"></script>
+    <script type="text/javascript">
+      var dpandaApiDomainConfig = "/dpanda/api/config/domain";
+      $(function() {
+          $.get(dpandaApiDomainConfig)
+          .fail(function(){
+            //Handle error
+          })
+          .done(function(getDomainListResponse) {
+            for (var i = 0; i < getDomainListResponse['domains'].length; i++) {
+              $("#domainListOptions").append( $("<option>")
+                  .val(getDomainListResponse['domains'][i])
+                  .html(getDomainListResponse['domains'][i])
+              );
+            };
+          });
+      });
+
+    </script>
 
     <script type="text/javascript">
       var updateTime;
