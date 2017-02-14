@@ -79,7 +79,7 @@
 		<dp:set-variable name="'var://context/dpanda/backup'" value="$BackUpFile"/>
 
 		<xsl:if test="$BackUpFile='' or string-length(string($BackUpFile//mgmt:file)) &lt; 10">
-			<xsl:message dp:type="backup" dp:priority="alert">GB Backup request failed</xsl:message>
+			<xsl:message dp:type="dpanda-application-backup" dp:priority="error">Application Backup Failed</xsl:message>
 			<RESPONSE>
 				<RC>8</RC>
 				<Desc>Backup request failed</Desc>
