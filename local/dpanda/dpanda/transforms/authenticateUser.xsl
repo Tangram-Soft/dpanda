@@ -26,7 +26,7 @@
            <soapenv:Header/>
            <soapenv:Body>
               <man:request domain="default">
-               <man:get-samlart user="{$username}" password="{$password}"/>
+                <man:get-config class="User" name="{$username}"/>
              </man:request>
            </soapenv:Body>
          </soapenv:Envelope>
@@ -35,7 +35,7 @@
     <xsl:message>@@SD <xsl:value-of select="$result"/></xsl:message>
     <xsl:choose>
       <xsl:when test="$result//*[local-name()='result'] and not($result//*[local-name()='result']/text()='Authentication failure')">
-        <OutputCredential>group</OutputCredential>
+        <OutputCredential><xsl:value-of select="$result//*[local-name()='AccessLevel']"/></OutputCredential>
       </xsl:when>
       <xsl:otherwise>
         <!-- Leave empty for authentication failures -->
