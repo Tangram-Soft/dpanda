@@ -20,10 +20,12 @@ function createArray(context, i){
       /*this function create an array that contains the result action responses. if
       last response is pushed into the array, write to output*/
         var currentArray = session.name(context).getVariable('Array');
+        var currentData = JSON.parse(session.name(context + '_' + i).getVariable('data'));
         //pushed current response into the array
         if (session.name(context + '_' + i).getVariable('data'))
         {
-          currentArray.push(JSON.parse(session.name(context + '_' + i).getVariable('data')));
+          currentData.applianceId = session.name(context + '_' + i).getVariable('_extension/response-header/dpanda.id') ;
+          currentArray.push(currentData);
         } else {
           currentArray.push({"error": "unable to parse json response"});};
         //rewrite the array into the context variable

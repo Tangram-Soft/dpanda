@@ -5,7 +5,7 @@
 		<xsl:variable name="MultiResults">
 			<results mode="attempt-all" multiple-outputs="true">
 				<xsl:for-each select="document('local://dpanda/configuration.xml')//AppliancesToMonitor/Appliance">
-					<url>http://<xsl:value-of select="./@Host-ip"/>:<xsl:value-of select="./@api-port"/>
+					<url>https://<xsl:value-of select="./@host-ip"/>:<xsl:value-of select="./@api-port"/>
 						<xsl:value-of select="substring-before($URI,'?')"/>
 					</url>
 				</xsl:for-each>

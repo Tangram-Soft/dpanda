@@ -250,6 +250,7 @@
           //Handle error
         })
         .done(function(filesystemStatusResponse) {
+          console.log('width:' + Math.round((filesystemStatusResponse['totalInternal'] - filesystemStatusResponse['freeInternal'])*100/filesystemStatusResponse['totalInternal']) + '%');
           $("#encryptedFilesystemStatus").width(Math.round((filesystemStatusResponse['totalEncrypted'] - filesystemStatusResponse['freeEncrypted'])*100/filesystemStatusResponse['totalEncrypted']));
           $("#temporaryFilesystemStatus").width(Math.round((filesystemStatusResponse['totalTemporary'] - filesystemStatusResponse['freeTemporary'])*100/filesystemStatusResponse['totalTemporary']));
           $("#internalFilesystemStatus").width(Math.round((filesystemStatusResponse['totalInternal'] - filesystemStatusResponse['freeInternal'])*100/filesystemStatusResponse['totalInternal']));
@@ -273,160 +274,246 @@
 
       });
     </script>
-
     <!-- SystemUsage graphs -->
     <script type="text/javascript">
-      $(function() {
-        var applianceId = 'all';
-        var dpandaApiGetSystemUsage = '/dpanda/api/status/systemUsage?applianceId=' + applianceId;
-        var updateInterval = 500;
-        var legends = [];
-        var currentLoad = 0;
-        var currentMemory = 0;
-        var currentCpu = 0;
 
-        //var loadData = [];
+      $(function() {
+
+        var currentLoad = [];
+        var currentMemory = [];
+        var currentCpu = [];
+
+        var loadData = [];
         var memoryData = [];
         var cpuData = [];
 
-        var numberOfAppliances = 0;
         var totalPoints = 50;
 
         function getSystemUsage() {
+          if (loadData[0].length > 0) {
+            loadData[0] = loadData[0].slice(1);
+            loadData[1] = loadData[1].slice(1);
+          }
+          if (memoryData.length > 0) {
+            memoryData = memoryData.slice(1);
+          }
+          if (cpuData.length > 0) {
+            cpuData = cpuData.slice(1);
+          }
+
+          var applianceIds = "all" ;
+          var dpandaApiGetSystemUsage = '/dpanda/api/status/systemUsage?applianceId=' + applianceIds;
+
           $.ajax({
             type: 'GET',
             url: dpandaApiGetSystemUsage,
             dataType: 'json',
             processData: false,
             contentType: 'application/json',
+            async: false,
             error: function() {
               //Handle error
             },
             success: function(systemUsageResponse) {
-              var loadData = plotSystemLoad.getData();
-              var memoryData = plotSystemMemory.getData();
-              var cpuData = plotSystemCpu.getData();
-
-              var newLoadData = [];
-              var newMemoryData = [];
-              var newCpuData = [];
-
               $.each(systemUsageResponse['data'], function(index,value){
-                loadData[index].data = loadData[index].data.slice(1);
-                memoryData[index].data = memoryData[index].data.slice(1);
-                cpuData[index].data = cpuData[index].data.slice(1);
-
-                loadData[index].data.push([loadData[index].data.length - 1,value.Load]);
-                memoryData[index].data.push([memoryData[index].data.length - 1,value.Memory]);
-                cpuData[index].data.push([cpuData[index].data.length - 1,value.CPU]);
-
-                for (var i = 0; i < totalPoints; ++i) {
-                  loadData[index].data[i] = [i, loadData[index].data[i][1]]
-                  memoryData[index].data[i] = [i, memoryData[index].data[i][1]]
-                  cpuData[index].data[i] = [i, cpuData[index].data[i][1]]
-                }
-
-                newLoadData.push(loadData[index].data);
-                newMemoryData.push(memoryData[index].data);
-                newCpuData.push(cpuData[index].data);
-              });
-
-              plotSystemLoad.setData(newLoadData);
-              plotSystemLoad.draw();
-
-              plotSystemMemory.setData(newMemoryData);
-              plotSystemMemory.draw();
-
-              plotSystemCpu.setData(newCpuData);
-              plotSystemCpu.draw();
+              //console.log(systemUsageResponse);
+              currentLoad[index] = value.Load;//systemUsageResponse['Load'];
+              currentMemory = value.Memory;//systemUsageResponse['Memory'];
+              currentCpu = value.CPU;// systemUsageResponse['CPU'];
+            })
             }
           });
+
+          loadData[0].push(currentLoad[0]);
+          loadData[1].push(currentLoad[1]);
+
+          var graphLoadData = [];
+
+          // var tempArray = [];
+          // var tempArray2 = [];
+          // for (var i = 0; i < loadData[0].length; ++i) {
+          //   graphLoadData.push([i, loadData[0][i]])
+          //   //graphLoadData.push([i, loadData[1][i]])
+          // }
+          var tempArray = [];
+          var tempArray2 = [];
+
+          for (var i = 0; i < loadData[0].length; ++i) {
+            tempArray.push([i, loadData[0][i]]);
+            tempArray2.push([i, loadData[1][i]]);
+
+          }
+          graphLoadData.push(tempArray);
+          graphLoadData.push(tempArray2);
+
+          var graphMemoryData = [];
+          for (var i = 0; i < memoryData.length; ++i) {
+            graphMemoryData.push([i, memoryData[i]])
+          }
+
+          var graphCpuData = [];
+          for (var i = 0; i < cpuData.length; ++i) {
+            graphCpuData.push([i, cpuData[i]])
+          }
+
+          var res = [
+            {
+              data: graphLoadData,
+              // color: "#f44242"
+            },
+            {
+              data: graphMemoryData,
+              color: "#f44242"
+            },
+            {
+              data: graphCpuData,
+              color: "#f44242"
+            }
+          ];
+
+          return res;
         }
 
-        function initGraph(){
+        function initSystemUsage() {
+
+          var applianceIds = "all" ;
+          var dpandaApiGetSystemUsage = '/dpanda/api/status/systemUsage?applianceId=' + applianceIds;
+
           $.ajax({
             type: 'GET',
             url: dpandaApiGetSystemUsage,
             dataType: 'json',
             processData: false,
             contentType: 'application/json',
+            async: false,
             error: function() {
               //Handle error
             },
             success: function(systemUsageResponse) {
-              numberOfAppliances = systemUsageResponse['data'].length;
-              for (var xx = 0; xx < numberOfAppliances; xx++){
-                var graphData = [];
-
-                for (var i = 0; i < totalPoints ; i++) {
-                  graphData.push([i, 0])
-                };
-                legends.push(graphData);
-              };
-
-              plotSystemLoad = $.plot("#systemLoad", legends, {
-                series: {
-                  shadowSize: 0	// Drawing is faster without shadows
-                },
-                yaxis: {
-                  min: 0,
-                  max: 100,
-                  ticks: 10
-                },
-                xaxis: {
-                  show: false
-                }
-              });
-
-              plotSystemMemory = $.plot("#systemMemory", legends, {
-                series: {
-                  shadowSize: 0	// Drawing is faster without shadows
-                },
-                yaxis: {
-                  min: 0,
-                  max: 100,
-                  ticks: 10
-                },
-                xaxis: {
-                  show: false
-                }
-              });
-
-              plotSystemCpu = $.plot("#systemCpu", legends, {
-                series: {
-                  shadowSize: 0	// Drawing is faster without shadows
-                },
-                yaxis: {
-                  min: 0,
-                  max: 100,
-                  ticks: 10
-                },
-                xaxis: {
-                  show: false
-                }
-              });
-
-              setTimeout(updateSystemUsage, updateInterval);
+              $.each(systemUsageResponse['data'], function(index,value){
+              //console.log(systemUsageResponse);
+              currentLoad[index] = value.Load;//systemUsageResponse['Load'];
+              currentMemory = value.Memory;//systemUsageResponse['Memory'];
+              currentCpu = value.CPU;// systemUsageResponse['CPU'];
+            })
             }
           });
+          var tempArray = [];
+          var tempArray2 = [];
+
+          while (tempArray.length < totalPoints) {
+
+            tempArray.push(currentLoad[0]);
+            tempArray2.push(currentLoad[1]);
+            // console.log(loadData);
+          }
+
+          loadData.push(tempArray);
+          loadData.push(tempArray2);
+
+          while (memoryData.length < totalPoints) {
+            memoryData.push(currentMemory);
+          }
+
+          while (cpuData.length < totalPoints) {
+            cpuData.push(currentCpu);
+          }
+
+          var graphLoadData = [];
+          for (var i = 0; i < loadData.length; ++i) {
+            graphLoadData.push([i, loadData[0][i]])
+            // graphLoadData.push([i, loadData[0][i]])
+          }
+
+          var graphMemoryData = [];
+          for (var i = 0; i < memoryData.length; ++i) {
+            graphMemoryData.push([i, memoryData[i]])
+          }
+
+          var graphCpuData = [];
+          for (var i = 0; i < cpuData.length; ++i) {
+            graphCpuData.push([i, cpuData[i]])
+          }
+
+          var res = [
+            {
+              data: graphLoadData,
+              color: "#f44242"
+            },
+            {
+              data: graphMemoryData,
+              color: "#f44242"
+            },
+            {
+              data: graphCpuData,
+              color: "#f44242"
+            }
+          ];
+
+          return res;
         }
+
+        var updateInterval = 500;
+
+        var initData =  initSystemUsage();
+
+        var plotSystemLoad = $.plot("#systemLoad", [initData[0]], {
+          series: {
+            shadowSize: 0	// Drawing is faster without shadows
+          },
+          yaxis: {
+            min: 0,
+            max: 100,
+            ticks: 10
+          },
+          xaxis: {
+            show: false
+          }
+        });
+
+        var plotSystemMemory = $.plot("#systemMemory", [ initData[1] ], {
+          series: {
+            shadowSize: 0	// Drawing is faster without shadows
+          },
+          yaxis: {
+            min: 0,
+            max: 100,
+            ticks: 10
+          },
+          xaxis: {
+            show: false
+          }
+        });
+
+        var plotSystemCpu = $.plot("#systemCpu", [ initData[2] ], {
+          series: {
+            shadowSize: 0	// Drawing is faster without shadows
+          },
+          yaxis: {
+            min: 0,
+            max: 100,
+            ticks: 10
+          },
+          xaxis: {
+            show: false
+          }
+        });
 
         function updateSystemUsage() {
 
           var systemUsageTable = getSystemUsage();
-          // plotSystemLoad.setData([systemUsageTable[0]]);
-          // plotSystemLoad.draw();
-          //
-          // plotSystemMemory.setData([systemUsageTable[1]]);
-          // plotSystemMemory.draw();
-          //
-          // plotSystemCpu.setData([systemUsageTable[2]]);
-          // plotSystemCpu.draw();
-          //
+          plotSystemLoad.setData(systemUsageTable[0].data);
+          plotSystemLoad.draw();
+
+          plotSystemMemory.setData([systemUsageTable[1]]);
+          plotSystemMemory.draw();
+
+          plotSystemCpu.setData([systemUsageTable[2]]);
+          plotSystemCpu.draw();
           setTimeout(updateSystemUsage, updateInterval);
         }
 
-        initGraph();
+        setTimeout(updateSystemUsage, updateInterval);
 
       });
 

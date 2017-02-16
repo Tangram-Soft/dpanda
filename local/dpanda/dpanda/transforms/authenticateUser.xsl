@@ -21,7 +21,7 @@
     </xsl:variable>
 
     <xsl:variable name="result">
-      <dp:url-open target="https://dpanda.xml.mgmt:5550/service/mgmt/current" response="xml" http-method="post" http-headers="$somaRequestHeaders" >
+      <dp:url-open target="https://dpanda.xml.mgmt:5550/service/mgmt/3.0" response="xml" http-method="post" http-headers="$somaRequestHeaders" >
         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:man="http://www.datapower.com/schemas/management">
            <soapenv:Header/>
            <soapenv:Body>
