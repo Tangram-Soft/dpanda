@@ -201,7 +201,7 @@
 				<xsl:when test="$remoteUrl">
 					<xsl:variable name="uploadBackup_doBackup">
 						<dp:url-open target="{$uploadBackup_uploadUrl}" response="responsecode-ignore" data-type="base64">
-							<xsl:value-of select="uploadBackup_backupedData" />
+							<xsl:value-of select="$uploadBackup_backupedData" />
 						</dp:url-open>
 					</xsl:variable>
 					<xsl:if test="not($uploadBackup_doBackup//statuscode)">
