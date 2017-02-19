@@ -28,5 +28,8 @@
         <domain name="default"/>
       </domainsToBackup>
     </applicationBackup>
+    <secureBackup>
+      <remoteUrl></remoteUrl>
+    </secureBackup>
   </features>
 </dpanda-configuration>

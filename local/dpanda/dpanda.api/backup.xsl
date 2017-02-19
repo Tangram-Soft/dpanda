@@ -12,7 +12,6 @@
 	extension-element-prefixes="regexp dp dpconfig func dpa exslt">
 	version="1.0">
 
-	<xsl:output method="xml" />
 	<xsl:param name="configuration" select="document('local://dpanda/configuration.xml')"/>
 	<xsl:param name="remoteUrl" select="$configuration//applicationBackup/remoteUrl/text()" />
 
