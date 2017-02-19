@@ -22,7 +22,7 @@
 	<!--this function upload file to local dp storage-->
     <xsl:param name="setFile_fileName"/>
     <xsl:param name="setFile_data"/>
-		<xsl:message dp:type="backup" dp:priority="debug">set file data: <xsl:copy-of select="$setFile_data"/></xsl:message>
+		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">set file data: <xsl:copy-of select="$setFile_data"/></xsl:message>
 		<xsl:variable name="setFile_serializedData">
       <dp:serialize select="$setFile_data" omit-xml-decl="yes"/>
     </xsl:variable>
@@ -47,12 +47,12 @@
 		 <xsl:choose>
 			 <!--if set file succeeded-->
 			 <xsl:when test="contains($setFile_setFileResult//*[name()='dp:result']/text(), 'OK')">
-				 <xsl:message dp:type="backup" dp:priority="debug">set file succeeded</xsl:message>
+				 <xsl:message dp:type="dpanda-application-backup" dp:priority="debug">set file succeeded</xsl:message>
 				 <func:result select="true()"/>
 			 </xsl:when>
 			 <!--if set file failed-->
 			 <xsl:otherwise>
-				 <xsl:message dp:type="backup" dp:priority="error">set file failed</xsl:message>
+				 <xsl:message dp:type="dpanda-application-backup" dp:priority="error">set file failed</xsl:message>
 				 <func:reuslt select="false()"/>
 			 </xsl:otherwise>
 
@@ -85,12 +85,12 @@
 		<xsl:choose>
 			<!--if do action succeeded-->
 			<xsl:when test="contains($doActionRequest_doActionResult//*[name()='dp:result']/text(), 'OK')">
-				<xsl:message dp:type="backup" dp:priority="debug">do-action succeeded</xsl:message>
+				<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">do-action succeeded</xsl:message>
 				<func:result select="true()"/>
 			</xsl:when>
 			<!--if do action failed-->
 			<xsl:otherwise>
-				<xsl:message dp:type="backup" dp:priority="error">do-action failed</xsl:message>
+				<xsl:message dp:type="dpanda-application-backup" dp:priority="error">do-action failed</xsl:message>
 				<func:reuslt select="false()"/>
 			</xsl:otherwise>
 
@@ -98,7 +98,7 @@
 	</func:function>
 
 	<func:function name="dpa:rotateBackupFiles">
-		<xsl:message dp:type="backup" dp:priority="debug">backup rotation function has been started</xsl:message>
+		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">backup rotation function has been started</xsl:message>
 		<!--retreive backup file store snapshot-->
 		<xsl:variable name="rotateBackupFiles_localSnapshot">
 			<dp:url-open target="{$xmlMgmtInterface}" response="xml"  http-method="post">
@@ -114,9 +114,9 @@
 
 <!--checks amount of backups-->
 		<xsl:variable name="rotateBackupFiles_backupCount" select="count($rotateBackupFiles_localSnapshot//directory[@name='local:/backups/application']/file)"/>
-		<xsl:message dp:type="backup" dp:priority="debug">backup count: <xsl:value-of select="$rotateBackupFiles_backupCount"/></xsl:message>
+		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">backup count: <xsl:value-of select="$rotateBackupFiles_backupCount"/></xsl:message>
 		<xsl:if test="$rotateBackupFiles_backupCount 	&lt; 3">
-			<xsl:message dp:type="backup" dp:priority="debug">backup count is less then 3, no rotation needed</xsl:message>
+			<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">backup count is less then 3, no rotation needed</xsl:message>
 			<func:result select="true()"/>
 		</xsl:if>
 
@@ -126,14 +126,14 @@
 				<xsl:when test="position()=1">
 					<dp:set-variable name="'var://context/rotateFunc/oldestFileDate'" value="translate(./modified/text(), ' ', 'T')"/>
 					<dp:set-variable name="'var://context/rotateFunc/oldestFileName'" value="./@name"/>
-					<xsl:message dp:type="backup" dp:priority="debug">first file date <xsl:value-of select="dp:variable('var://context/rotateFunc/oldestFileDate')"/></xsl:message>
+					<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">first file date <xsl:value-of select="dp:variable('var://context/rotateFunc/oldestFileDate')"/></xsl:message>
 				</xsl:when>
 
 				<xsl:otherwise>
 					<xsl:variable name="rotateBackupFiles_currentBackupDate" select="translate(./modified/text(), ' ', 'T')"/>
-					<xsl:message dp:type="backup" dp:priority="debug">current file date <xsl:value-of select="$rotateBackupFiles_currentBackupDate"/></xsl:message>
+					<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">current file date <xsl:value-of select="$rotateBackupFiles_currentBackupDate"/></xsl:message>
 					<xsl:variable name="rotateBackupFiles_timeDiff" select="date:difference($rotateBackupFiles_currentBackupDate, dp:variable('var://context/rotateFunc/oldestFileDate'))"/>
-					<xsl:message dp:type="backup" dp:priority="debug">time diff <xsl:value-of select="$rotateBackupFiles_timeDiff"/></xsl:message>
+					<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">time diff <xsl:value-of select="$rotateBackupFiles_timeDiff"/></xsl:message>
 					<xsl:if test="not(contains($rotateBackupFiles_timeDiff, '-'))">
 						<dp:set-variable name="'var://context/rotateFunc/oldestFileDate'" value="$rotateBackupFiles_currentBackupDate"/>
 						<dp:set-variable name="'var://context/rotateFunc/oldestFileName'" value="./@name"/>
@@ -143,8 +143,8 @@
 			</xsl:choose>
 		</xsl:for-each>
 
-		<xsl:message dp:type="backup" dp:priority="debug">oldest file date <xsl:value-of select="dp:variable('var://context/rotateFunc/oldestFileDate')"/></xsl:message>
-		<xsl:message dp:type="backup" dp:priority="debug">oldest file name <xsl:value-of select="dp:variable('var://context/rotateFunc/oldestFileName')"/></xsl:message>
+		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">oldest file date <xsl:value-of select="dp:variable('var://context/rotateFunc/oldestFileDate')"/></xsl:message>
+		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">oldest file name <xsl:value-of select="dp:variable('var://context/rotateFunc/oldestFileName')"/></xsl:message>
 		<xsl:variable name="rotateBackupFiles_deleteFile">
 			<DeleteFile>
 				<File>local:///backups/application/<xsl:value-of select="dp:variable('var://context/rotateFunc/oldestFileName')"/></File>
@@ -159,7 +159,7 @@
 
 		<!--if backup failed-->
 		<xsl:if test="not($uploadBackup_BackUpFile//*[name()='dp:file'])">
-			<xsl:message dp:type="backup" dp:priority="alert">Application Backup request failed</xsl:message>
+			<xsl:message dp:type="dpanda-application-backup" dp:priority="alert">Application Backup request failed</xsl:message>
 			<xsl:variable name="uploadBackup_responseToClient">
 				<xsl:text>{"appBackupStatus":"failed",</xsl:text>
 				<xsl:text>"reason":"Application Backup request failed"}</xsl:text>
@@ -167,7 +167,7 @@
 		<func:result select="$uploadBackup_responseToClient"/>
 		</xsl:if>
 
-		<xsl:message dp:type="backup" dp:priority="debug">Backup request succeed</xsl:message>
+		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">Backup request succeed</xsl:message>
 		<!-- generate backup file name with current timestamp -->
 		<xsl:variable name="uploadBackup_deviceName" select="$configuration//appliances/appliance[@id='1']/@host-name" />
 		<xsl:variable name="uploadBackup_filename" select="translate(concat($uploadBackup_deviceName,'_',$uploadBackup_BackUpFile//*[name()='dp:timestamp']/text(),'_applicationBackup.zip'), ':', '')" />
@@ -175,7 +175,7 @@
 		<xsl:if test="not($remoteUrl)">
 			<xsl:variable name="uploadBackup_rotateBackups" select="dpa:rotateBackupFiles()"/>
 			<xsl:if test="not($uploadBackup_rotateBackups)">
-				<xsl:message dp:type="backup" dp:priority="error">Backup rotation Failed</xsl:message>
+				<xsl:message dp:type="dpanda-application-backup" dp:priority="error">Backup rotation Failed</xsl:message>
 			</xsl:if>
 		</xsl:if>
 		<!--set backup dest url-->
@@ -192,7 +192,7 @@
 
 		<!-- Extract the export content string -->
 		<xsl:variable name="uploadBackup_backupedData" select="$uploadBackup_BackUpFile//*[name()='dp:file']/text()" />
-		<xsl:message dp:type="backup" dp:priority="debug">Upload url is: <xsl:value-of select="$uploadBackup_uploadUrl"/></xsl:message>
+		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">Upload url is: <xsl:value-of select="$uploadBackup_uploadUrl"/></xsl:message>
 
 
 		<xsl:variable name="uploadBackup_uploadResult">
@@ -200,7 +200,7 @@
 				<!-- Upload it to the external storage -->
 				<xsl:when test="$remoteUrl">
 					<xsl:variable name="uploadBackup_doBackup">
-						<dp:url-open target="{$uploadBackup_uploadUrl}" response="responsecode-ignore" data-type="base64">
+						<dp:url-open target="{$uploadBackup_uploadUrl}" response="xml" data-type="base64">
 							<xsl:value-of select="$uploadBackup_backupedData" />
 						</dp:url-open>
 					</xsl:variable>
@@ -231,12 +231,12 @@
 		<xsl:variable name="uploadBackup_responseToClient">
 			<xsl:choose>
 				<xsl:when test="$uploadBackup_uploadResult='succeed'">
-					<xsl:message dp:type="backup" dp:priority="debug">upload backup succeed</xsl:message>
+					<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">upload backup succeed</xsl:message>
 					<xsl:text>{"appBackupStatus":"succeed", </xsl:text>
 					<xsl:text>"fileName":"</xsl:text><xsl:value-of select="$uploadBackup_filename"/><xsl:text>"}</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:message dp:type="backup" dp:priority="error">upload backup failed</xsl:message>
+					<xsl:message dp:type="dpanda-application-backup" dp:priority="error">upload backup failed</xsl:message>
 					<xsl:text>{"appBackupStatus":"failed",</xsl:text>
 					<xsl:text>"reason":"</xsl:text><xsl:value-of select="dp:variable('var://context/panda/error')"/><xsl:text>"}</xsl:text>
 				</xsl:otherwise>
