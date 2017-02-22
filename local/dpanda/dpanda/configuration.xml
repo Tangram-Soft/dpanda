@@ -1,4 +1,5 @@
 <dpanda-configuration>
+<<<<<<< HEAD
   <Devices>
     <AppliancesToMonitor>
       <Appliance id="1" host-name="idg.dpanda.1" host-ip="127.0.0.1" api-port="9080"/>
@@ -8,18 +9,39 @@
   <Features>
     <BackhandMonitor>
       <StaticTargets>
+=======
+  <devices>
+    <appliances>
+      <!--id 1 should be the local DP-->
+      <appliance id="1" host-name="idg.dpanda" host-ip="127.0.0.1" dpanda.main-port="9080" monitor="true"/>
+    </appliances>
+  </devices>
+  <features>
+    <backhandMonitor>
+      <staticTargets>
+>>>>>>> 3b3a45912473ddeeb19c792d815ff99bf25b837a
         <!--RemoteTarget domain="domainName" name="objectName" class="objectClass" host="ip/hostName" port="port"/-->
-        <RemoteTarget domain="dpanda" name="panda" class="proxy" host="dpanda.xml.mgmt " port="5550"/>
-      </StaticTargets>
-      <ServiceTypes>
+        <remoteTarget domain="dpanda" name="panda" class="proxy" host="dpanda.xml.mgmt " port="5550"/>
+      </staticTargets>
+      <serviceTypes>
         <serviceType name="MultiProtocolGateway" monitor="true"/>
         <serviceType name="WebServiceProxy" monitor="true"/>
         <serviceType name="XMLFirewallService" monitor="true"/>
         <serviceType name="MQQM" monitor="true"/>
-      </ServiceTypes>
-      <ExcludedDomains>
-        <Domain name="default"/>
-      </ExcludedDomains>
-    </BackhandMonitor>
-  </Features>
+      </serviceTypes>
+      <excludeDomains>
+        <domain name="default"/>
+        <domain name="dpanda"/>
+      </excludeDomains>
+    </backhandMonitor>
+    <applicationBackup>
+      <remoteUrl></remoteUrl>
+      <domainsToBackup>
+        <domain name="default"/>
+      </domainsToBackup>
+    </applicationBackup>
+    <secureBackup>
+      <remoteUrl></remoteUrl>
+    </secureBackup>
+  </features>
 </dpanda-configuration>

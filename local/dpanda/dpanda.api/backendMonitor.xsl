@@ -23,7 +23,7 @@
 
   <xsl:param name="xmlMgmtInterface" select="'https://dpanda.xml.mgmt:5550/service/mgmt/3.0'"/>
   <xsl:param name="excludeDomainslist">
-    <xsl:for-each select="document('local://dpanda/configuration.xml')//ExcludedDomains/Domain/@name">
+    <xsl:for-each select="document('local://dpanda/configuration.xml')//excludedDomains/domain/@name">
       <xsl:value-of select="."/>
     </xsl:for-each>
   </xsl:param>
@@ -181,12 +181,12 @@
        <xsl:for-each select="exslt:node-set($domainList)/domainList/appDomain">
          <xsl:variable name="currentDomain" select="./text()"/>
          <xsl:variable name="handleLoadBalancerGroup" select="dpa:handleLBG($currentDomain)"/>
-         <xsl:for-each select="document('local://dpanda/configuration.xml')//ServiceTypes/serviceType[@monitor='true']/@name">
+         <xsl:for-each select="document('local://dpanda/configuration.xml')//serviceTypes/serviceType[@monitor='true']/@name">
           <xsl:variable name="result" select="dpa:retriveBackendHost($currentDomain, .)"/>
             <xsl:copy-of select="$result"/>
         </xsl:for-each>
        </xsl:for-each>
-       <xsl:for-each select="document('local://dpanda/configuration.xml')//StaticTargets/RemoteTarget">
+       <xsl:for-each select="document('local://dpanda/configuration.xml')//staticTargets/remoteTarget">
          <xsl:copy-of select="."/>
        </xsl:for-each>
       </BackendTargets>
