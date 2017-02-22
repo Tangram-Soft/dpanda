@@ -2,7 +2,7 @@
   <Devices>
     <AppliancesToMonitor>
       <Appliance id="1" host-name="idg.dpanda.1" host-ip="127.0.0.1" api-port="9080"/>
-      <Appliance id="2" host-name="idg.dpanda.2" host-ip="172.17.0.3" api-port="9080"/>
+      <Appliance id="2" host-name="idg.dpanda.2" host-ip="172.17.0.3" api-port="9080"/> 
     </AppliancesToMonitor>
   </Devices>
   <Features>

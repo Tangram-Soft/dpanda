@@ -163,25 +163,32 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6 col-sm-3 col-xs-6 tile">
-              <span>Filesystem</span>
-              <div class="progress progress_sm" style="width: 76%;">
-                <div class="progress-bar bg-green" id="encryptedFilesystemStatus" role="progressbar"></div>
+            <div class="col-md-12 col-sm-6 col-xs-12">
+              <div class="x_panel">
+                <div class="x_content">
+                  <table class="table">
+                    <thead>
+                      <tr id="appliancesInfoTable">
+                        <th style="width: 130px"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr id="activeUsers">
+                        <th scope="row">Active Users</th>
+                      </tr>
+                      <tr id="totalConnections">
+                        <th scope="row">Total Connections</th>
+                        <td>TBA</td>
+                        <td>TBA</td>
+                      </tr>
+                      <tr id="filesystemStatus">
+                        <th scope="row">Filesystem Status</th>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
               </div>
-              <div class="progress progress_sm" style="width: 76%;">
-                <div class="progress-bar bg-green" id="temporaryFilesystemStatus" role="progressbar"></div>
-              </div>
-              <div class="progress progress_sm" style="width: 76%;">
-                <div class="progress-bar bg-green" id="internalFilesystemStatus" role="progressbar"></div>
-              </div>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-6 tile">
-              <span>Total Connections</span>
-              <h2>231,809</h2>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-6 tile">
-              <span>Active Users</span>
-              <h2><span id="totalActiveUsers"/></h2>
             </div>
           </div>
           <br />
@@ -243,16 +250,26 @@
     <!-- Filesystem Status -->
     <script type="text/javascript">
       $(function(){
-
-        var dpandaGetFilesystemStatus = '/dpanda/api/status/filesystem';
+        var applianceId = 'all';
+        var dpandaGetFilesystemStatus = '/dpanda/api/status/filesystem?applianceId=' + applianceId;
         $.get(dpandaGetFilesystemStatus)
         .fail(function(){
           //Handle error
         })
         .done(function(filesystemStatusResponse) {
-          $("#encryptedFilesystemStatus").width(Math.round((filesystemStatusResponse['totalEncrypted'] - filesystemStatusResponse['freeEncrypted'])*100/filesystemStatusResponse['totalEncrypted']));
-          $("#temporaryFilesystemStatus").width(Math.round((filesystemStatusResponse['totalTemporary'] - filesystemStatusResponse['freeTemporary'])*100/filesystemStatusResponse['totalTemporary']));
-          $("#internalFilesystemStatus").width(Math.round((filesystemStatusResponse['totalInternal'] - filesystemStatusResponse['freeInternal'])*100/filesystemStatusResponse['totalInternal']));
+          $.each(filesystemStatusResponse['data'], function(index,value){
+            $("#filesystemStatus").append('<td>' +
+                                          '<div class="progress progress_sm">' +
+                                          '<div class="progress-bar bg-green" role="progressbar" style="width: ' + Math.round((value.totalEncrypted - value.freeEncrypted)*100/value.totalEncrypted) + 'px;"/>' +
+                                          '</div>' +
+                                          '<div class="progress progress_sm">' +
+                                          '<div class="progress-bar bg-green" role="progressbar" style="width: ' + Math.round((value.totalTemporary - value.freeTemporary)*100/value.totalTemporary) + 'px;"/>' +
+                                          '</div>' +
+                                          '<div class="progress progress_sm">' +
+                                          '<div class="progress-bar bg-green" role="progressbar" style="width: ' + Math.round((value.totalInternal - value.freeInternal)*100/value.totalInternal) + 'px;"/>' +
+                                          '</div>' +
+                                          '</td>');
+          })
         });
 
       });
@@ -261,14 +278,16 @@
     <!-- Active Users count -->
     <script type="text/javascript">
       $(function(){
-
-        var dpandaGetActiveUsers = '/dpanda/api/status/activeUsers';
+        var applianceId = 'all';
+        var dpandaGetActiveUsers = '/dpanda/api/status/activeUsers?applianceId=' + applianceId;
         $.get(dpandaGetActiveUsers)
         .fail(function(){
           //Handle error
         })
         .done(function(activeUsersResponse) {
-          $("#totalActiveUsers").html(activeUsersResponse['totalActiveUsers']);
+          $.each(activeUsersResponse['data'], function(index,value){
+            $("#activeUsers").append('<td>' + value.totalActiveUsers + '</td>');
+          })
         });
 
       });
@@ -277,6 +296,8 @@
     <!-- SystemUsage graphs -->
     <script type="text/javascript">
       $(function() {
+        var colors = ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"];
+
         var applianceId = 'all';
         var dpandaApiGetSystemUsage = '/dpanda/api/status/systemUsage?applianceId=' + applianceId;
         var updateInterval = 500;
@@ -357,7 +378,8 @@
               numberOfAppliances = systemUsageResponse['data'].length;
               for (var xx = 0; xx < numberOfAppliances; xx++){
                 var graphData = [];
-
+                $("#monitoredAppliances").append(' <i class="fa fa-square" style="color:' + colors[xx] + '" /> ' + systemUsageResponse["data"][xx]["applianceId"]);
+                $("#appliancesInfoTable").append('<th><i class="fa fa-square" style="color:' + colors[xx] + '" /> ' + systemUsageResponse["data"][xx]["applianceId"] + '</th>');
                 for (var i = 0; i < totalPoints ; i++) {
                   graphData.push([i, 0])
                 };
