@@ -9,12 +9,14 @@ function createJson(context, i){
       } else {
         var buffer = buffer.toString();
         //put the json object in context variable name 'data'
-        session.name(context + '_' + i).setVariable('data', buffer);
-        //transfer the json to function that arrange it in a Array and write
+        if(buffer.length){
+          session.name(context + '_' + i).setVariable('data', buffer);
+      } else {
+        session.name(context + '_' + i).setVariable('data', '{}');
+      }
         createArray(context, i);
       }});
-
-    };
+  };
 
 function createArray(context, i){
       /*this function create an array that contains the result action responses. if

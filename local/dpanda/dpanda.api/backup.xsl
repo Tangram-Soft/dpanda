@@ -21,7 +21,6 @@
 	<!--this function upload file to local dp storage-->
     <xsl:param name="setFile_fileName"/>
     <xsl:param name="setFile_data"/>
-		<xsl:message dp:type="dpanda-application-backup" dp:priority="debug">set file data: <xsl:copy-of select="$setFile_data"/></xsl:message>
 		<xsl:variable name="setFile_serializedData">
       <dp:serialize select="$setFile_data" omit-xml-decl="yes"/>
     </xsl:variable>
