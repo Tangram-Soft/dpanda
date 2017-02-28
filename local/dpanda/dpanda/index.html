@@ -176,10 +176,8 @@
                       <tr id="activeUsers">
                         <th scope="row">Active Users</th>
                       </tr>
-                      <tr id="totalConnections">
+                      <tr id="tcpConnections">
                         <th scope="row">Total Connections</th>
-                        <td>TBA</td>
-                        <td>TBA</td>
                       </tr>
                       <tr id="filesystemStatus">
                         <th scope="row">Filesystem Status</th>
@@ -269,6 +267,24 @@
                                           '<div class="progress-bar bg-green" role="progressbar" style="width: ' + Math.round((value.totalInternal - value.freeInternal)*100/value.totalInternal) + 'px;"/>' +
                                           '</div>' +
                                           '</td>');
+          })
+        });
+
+      });
+    </script>
+
+    <!-- Tcp Connections Status -->
+    <script type="text/javascript">
+      $(function(){
+        var applianceId = 'all';
+        var dpandaGetTcpConnectionsStatus = '/dpanda/api/status/tcpConnections?applianceId=' + applianceId;
+        $.get(dpandaGetTcpConnectionsStatus)
+        .fail(function(){
+          //Handle error
+        })
+        .done(function(tcpConnectionsStatusResponse) {
+          $.each(tcpConnectionsStatusResponse['data'], function(index,value){
+            $("#tcpConnections").append('<td>' + value.established + '</td>');
           })
         });
 
