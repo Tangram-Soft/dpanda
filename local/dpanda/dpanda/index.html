@@ -47,7 +47,7 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <ul class="nav side-menu">
-                  <li class="active"><a><i class="fa fa-home"></i> Home </a></li>
+                  <li><a href="index.html"><i class="fa fa-home"></i> Home </a></li>
                 </ul>
               </div>
               <div class="menu_section">
@@ -255,6 +255,8 @@
 
     <!-- Custom Theme Scripts -->
     <script src="js/custom.js"></script>
+    <script src="js/dpanda.api.js"></script>
+    <script src="js/dpanda.ui.js"></script>
 
     <!-- Filesystem Status -->
     <script type="text/javascript">
@@ -479,44 +481,6 @@
 
       });
 
-    </script>
-
-    <script type="text/javascript">
-      var updateTime;
-      var currentTime;
-      var dpandaGetDateTime = '/dpanda/api/status/dateTime';
-
-      function displayClock() {
-        if (currentTime - updateTime > 300000) {
-          $.get(dpandaGetDateTime)
-          .fail(function(){
-            //Handle error
-          })
-          .done(function(dateTimeResponse) {
-            updateTime = new Date(Date.parse(dateTimeResponse["timestamp"]));
-            currentTime = updateTime;
-          });
-        };
-        currentTime =  new Date(currentTime.getTime() + 1000);
-        document.getElementById("clock").innerHTML = currentTime.toUTCString();
-        proceed=setTimeout(displayClock,1000);
-      };
-
-
-      var initFunc = function(){
-        $.get(dpandaGetDateTime)
-        .fail(function(){
-          //Handle error
-        })
-        .done(function(dateTimeResponse) {
-          updateTime = new Date(Date.parse(dateTimeResponse["timestamp"]));
-          currentTime = updateTime;
-          document.getElementById("clock").innerHTML = currentTime.toUTCString();
-          proceed=setTimeout(displayClock,1000);
-        });
-
-      }
-      $(initFunc);
     </script>
   </body>
 </html>
