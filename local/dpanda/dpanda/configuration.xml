@@ -1,36 +1,70 @@
 <dpanda-configuration>
   <devices>
     <appliances>
-      <!--id 1 should be the local DP-->
-      <appliance id="1" host-name="idg.dpanda" host-ip="127.0.0.1" dpanda.main-port="9080" monitor="true"/>
-      <!-- <appliance id="2" host-name="idg.dpanda.VM" host-ip="192.168.0.208" dpanda.main-port="9080" monitor="true"/> -->
+      <!-- list of all appliannces that are part of the cluster.
+          if attribute 'monitor' value is 'true', the multiple query api will Send api's request to this appliance as well
+          attribute 'id' 'host-name' used to recgonistion of the devices, host ip is the appliance ip port that is used to query dpanda
+          dpanda.main-port might be hard-coded or omitted from this configuration at all -->
+
+      <!--id 1 should be the local DP, We should consider generate this element as part of the installization procces-->
+      <appliance id="1" host-name="idg.dpanda" host-ip="172.17.0.2" dpanda.main-port="9080" monitor="true"/>
+      <appliance id="2" host-name="idg.dpanda2" host-ip="172.17.0.2" dpanda.main-port="9080" monitor="true"/>
     </appliances>
   </devices>
   <features>
+    <!-- dpanda features that you should be able to configure as demanded  -->
+
+    <!-- defining the manner the automated datapower synchronization is operationg -->
+    <automaticSync>
+      <syncFreq/>
+
+    </automaticSync>
     <backhandMonitor>
+      <!-- Backend Monitor api configuration -->
+
+      <!-- static targets configuration allows the administrator to add manually backend remote host. he should be able to configure each one of this attribute -->
       <staticTargets>
-        <!--RemoteTarget domain="domainName" name="objectName" class="objectClass" host="ip/hostName" port="port"/-->
-        <!--remoteTarget domain="dpanda" name="panda" class="proxy" host="dpanda.xml.mgmt " port="5550"/-->
+        <!--RemoteTarget domain="domainName" name="objectName" class="objectClass" host="protocol://ip:port/" /-->
+        <!--remoteTarget domain="dpanda" name="panda" class="proxy" host="http://dpanda.xml.mgmt:5550" /-->
       </staticTargets>
+      <!-- service defined which type of datapower's serivces to monitor automaticlly. the service type themself should be hard-coded,
+      and only the monitor attribute should be configurble to 'true' or 'false'.  -->
       <serviceTypes>
         <serviceType name="MultiProtocolGateway" monitor="true"/>
         <serviceType name="WebServiceProxy" monitor="true"/>
-        <serviceType name="XMLFirewallService" monitor="true"/>
+        <serviceType name="XMLFirewallService" monitor="false"/>
         <serviceType name="MQQM" monitor="true"/>
       </serviceTypes>
+      <!-- excluded domains defined which domains the backend monitor will exlude when building the remote host target list. dpanda should be hard-coded. -->
       <excludeDomains>
         <domain name="default"/>
         <domain name="dpanda"/>
       </excludeDomains>
+
     </backhandMonitor>
+    <!-- appliction backup configuration  set the ftp site that this api will use to upload the application backup he created and which domains to backup.-->
+
     <applicationBackup>
+      <!-- if remote url is empty element, the api will upload the files to the local file store  -->
       <remoteUrl></remoteUrl>
+      <!-- <remoteUrl>ftp://user:pass@ip:port/filePath</remoteUrl> -->
+
+      <!-- domains to backup is defining which App domain to include when performing the Beckup.
+      administrtor should be able to add or remove domains as needed -->
       <domainsToBackup>
         <domain name="default"/>
       </domainsToBackup>
+      <!-- configuration of the backup frequncy -->
+      <backupFreq/>
     </applicationBackup>
+    <!-- secure backup configuration -->
     <secureBackup>
+      <!-- if remote url is empty element, the api will upload the files to the local file store  -->
       <remoteUrl></remoteUrl>
+      <!-- <remoteUrl>ftp://user:pass@ip:port/filePath</remoteUrl> -->
+
+      <!-- configuration of the backup frequncy -->
+      <backupFreq/>
     </secureBackup>
   </features>
 </dpanda-configuration>

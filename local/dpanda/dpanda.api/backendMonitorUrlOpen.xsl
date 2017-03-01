@@ -176,7 +176,7 @@
 
       <xsl:text>]}</xsl:text>
     </xsl:variable>
-
+    <xsl:variable name='setFile' select="dpa:setFile('local://dpanda/dpanda.api/remotesBackendsStatus.txt', $backendList_json)"/>
     <func:result select="$backendList_json"/>
   </func:function>
 
@@ -207,7 +207,6 @@
        </xsl:for-each>
       </BackendTargets>
      </xsl:variable>
-     <xsl:variable name='setFile' select="dpa:setFile('local://dpanda/dpanda.api/backendTargets.xml', $backendTargets)"/>
      <func:result select="dpa:buildJson($backendTargets)"/>
   </func:function>
 

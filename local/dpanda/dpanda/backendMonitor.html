@@ -106,58 +106,23 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Users <small>Some examples to get you started</small></h3>
-              </div>
-
-              <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                  </div>
-                </div>
+                <h3>Backend Monitor</h3>
               </div>
             </div>
 
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
             <div class="x_title">
-              <h2>Backend monitor link status <small>Users</small></h2>
+              <h2>Link-status Data table</h2>
               <ul class="nav navbar-right panel_toolbox">
-                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Settings 1</a>
-                    </li>
-                    <li><a href="#">Settings 2</a>
-                    </li>
-                  </ul>
-                </li>
-                <li><a class="close-link"><i class="fa fa-close"></i></a>
-                </li>
               </ul>
               <div class="clearfix"></div>
             </div>
-            <div class="x_content">
+            <div class="table-responsive">
               <!--p class="text-muted font-13 m-b-30">
               </p-->
 
-              <table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
-                <thead>
-                  <tr>
-                    <th class="sorting_desc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 160px;" aria-sort="descending">Domain</th>
-                    <th class="sorting_desc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="OBject Name: activate to sort column ascending" style="width: 160px;" aria-sort="descending">Object name</th>
-                    <th class="sorting_desc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Object Type: activate to sort column ascending" style="width: 160px;" aria-sort="descending">Object type</th>
-                    <th class="sorting_desc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Remote Host: activate to sort column ascending" style="width: 160px;" aria-sort="descending">Remote host</th>
-                    <th class="sorting_desc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Link status: activate to sort column ascending" style="width: 160px;" aria-sort="descending">Link status</th>
-                  </tr>
-                </thead>
-
-                <tbody>
+              <table id="datatable" class="table table-striped table-bordered dataTable no-footer jambo_table bulk_action" role="grid" aria-describedby="datatable_info">
                 </table>
               </div>
             </div>
@@ -208,8 +173,34 @@
 
     <script type="text/javascript">
 
-      function getBackendStatus(){
-        var dpandaGetBackendHealthCheck = '/dpanda/api/backendMonitor';
+    function getSelectedStatus(dataArray,selector,callback){
+
+      var dpandaGetBackendHealthCheck = '/dpanda/api/remoteHostStatus/' + dataArray[1] + '-' + dataArray[2] + '?applianceId=all';
+      $.ajax({
+        type: 'GET',
+        url: dpandaGetBackendHealthCheck,
+        dataType: 'json',
+        processData: false,
+        contentType: 'application/json',
+        error: function() {
+          //Handle error
+          var result = 'connectionFailed'
+          callback(result, selector);
+        },
+        success: function(backendStatus) {
+
+          var linkArray = [];
+          $.each(backendStatus.data, function(key,val){
+            linkArray.push(val.linkStatus);
+          });
+
+          callback(linkArray, selector);
+
+      }
+    });
+}
+      function getBackendStatus(callback){
+        var dpandaGetBackendHealthCheck = '/dpanda/api/backendMonitor?applianceId=all';
         $.ajax({
           type: 'GET',
           url: dpandaGetBackendHealthCheck,
@@ -221,26 +212,104 @@
           },
           success: function(backendStatus) {
 
-            var items = [];
-            $.each(backendStatus.RemoteHostStatus, function(key, val){
-              console.log(val);
-              items.push("<tr>");
-              items.push("<td id ='" + key + '-' + Object.keys(val)[0] + "'>" + val.domain + "</td>");
-              items.push("<td id ='" + key +"'>" + val.objectName + "</td>");
-              items.push("<td id ='" + key +"'>" + val.objectType + "</td>");
-              items.push("<td id ='" + key +"'>" + val.remoteHost + "</td>");
-              items.push("<td id ='" + key +"'>" + val.linkStatus + "</td>");
-              items.push("</tr>");
+            var columns = [
+              {title: '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>'
+              },
+              {title : "Domain"},
+              {title : "Object Name"},
+              {title : "Object Type"},
+              {title : "Remote Host"},
+            ]
+            console.log(backendStatus.data.length);
+            for (var i = 1; i<=backendStatus.data.length; i++ ){
+              columns.push({title : "Link Status:" + backendStatus.data[i-1].applianceId, "class" : 'link'})};
+
+            // columns.push()
+
+            console.log(columns);
+
+            var dataSet=[];
+            $.each(backendStatus.data[0].RemoteHostStatus, function(key, val){
+              var items = [];
+              var i = 1;
+              items.push('<i class="fa fa-refresh"></i>');
+              items.push(val.domain);
+              items.push(val.objectName);
+              items.push(val.objectType);
+              items.push(val.remoteHost);
+              for (i; i<=backendStatus.data.length; i++ ){
+              items.push(backendStatus.data[i-1].RemoteHostStatus[key].linkStatus)};
+              dataSet.push(items);
             });
 
-            $("<tbody/>", { html: items.join("")}).appendTo("table");
-            var data = document.getElementById('1').innerHTML;
-            console.log(data);
+
+            callback(columns,dataSet, backendStatus.data.length);
+
+
 
           }
       })};
 
-      var backendStatus = getBackendStatus();
+      var backendStatus = getBackendStatus(function(columns, dataSet, dpNum){
+        linkCol = [];
+        for (dpNum; dpNum > 0; dpNum--){
+          linkCol.push(-dpNum);
+        }
+        // console.log(linkCol);
+        $(document).ready(function() {
+          var table = $('#datatable').DataTable( {
+              data: dataSet,
+              columns: columns,
+              order: [],
+              columnDefs: [
+                { targets: linkCol ,
+                  "fnCreatedCell": function(nTd, sData, oData, iRow, iCol){
+                    if(sData == 'down'){
+                    $(nTd).css({"color":"red", "font-weight": "bold"});
+                  } else {
+                    $(nTd).css({"color":"green", "font-weight": "bold"})};
+                  }
+                },
+                {targets : 0, orderable: false}
+              ]
+          });
+          $('#datatable thead').on( 'click', 'th' , function () {
+            console.log(table.cell(this).data());
+          });
+          $('#datatable tbody').on( 'click', 'td' , function () {
+
+            if (table.cell(this).index().column == 0){
+            var data =  table.row(this).data();
+            var selector = this
+
+            data[0] = '<i class="fa fa-refresh fa-spin"></i>';
+            table.row(selector).cell(selector,0).data(data[0]).draw();
+            getSelectedStatus(data, selector, function(linkArray, selector){
+              if (linkArray == 'connectionFailed'){
+                data[0] = '<i class="fa fa-refresh"></i>';;
+              } else {
+                  for(var i in linkCol){
+                    data[data.length+linkCol[i]] = linkArray[i];
+                    data[0] = '<i class="fa fa-refresh"></i>';
+                    if(linkArray[i]=='up'){
+                      table.row(selector).cell(selector, data.length +linkCol[i]).node().style.color = 'green';
+                    } else {
+                      table.row(selector).cell(selector, data.length+linkCol[i]).node().style.color = 'red';
+                    }
+                  };
+            }
+              table.row(selector).data(data).draw(true);
+
+
+            });
+            // table.row(this).data(data).draw();
+          };
+        });
+
+        });
+
+        });
+      // });
 
     </script>
 
