@@ -47,7 +47,7 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <ul class="nav side-menu">
-                  <li class="active"><a><i class="fa fa-home"></i> Home </a></li>
+                  <li><a href="index.html"><i class="fa fa-home"></i> Home </a></li>
                 </ul>
               </div>
               <div class="menu_section">
@@ -58,9 +58,15 @@
                       <li><a href="upload-remote-wsdl.html">Upload Remote WSDL</a></li>
                     </ul>
                   </li>
-                  <li><a><i class="fa fa-desktop"></i> Network <span class="fa fa-chevron-down"></span></a>
+                  <li><a><i class="fa fa-wifi"></i> Network <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="vipControl.html">VIP Control</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-code-fork"></i> Synchronize <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="configSync.html">Configuration</a></li>
+                      <li><a href="fileSync.html">Files</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -69,6 +75,11 @@
                 <h3>Development</h3>
                 <ul class="nav side-menu">
                   <li><a href="ide.html"><i class="fa fa-bug"></i> Web IDE</a></li>
+                </ul>
+              </div>
+              <div class="menu_section">
+                <ul class="nav side-menu">
+                  <li><a href="configuration.html"><i class="fa fa-cog"></i> Configuration</a></li>
                 </ul>
               </div>
               <div class="menu_section_fix"></div>
@@ -176,10 +187,8 @@
                       <tr id="activeUsers">
                         <th scope="row">Active Users</th>
                       </tr>
-                      <tr id="totalConnections">
+                      <tr id="tcpConnections">
                         <th scope="row">Total Connections</th>
-                        <td>TBA</td>
-                        <td>TBA</td>
                       </tr>
                       <tr id="filesystemStatus">
                         <th scope="row">Filesystem Status</th>
@@ -246,6 +255,8 @@
 
     <!-- Custom Theme Scripts -->
     <script src="js/custom.js"></script>
+    <script src="js/dpanda.api.js"></script>
+    <script src="js/dpanda.ui.js"></script>
 
     <!-- Filesystem Status -->
     <script type="text/javascript">
@@ -269,6 +280,24 @@
                                           '<div class="progress-bar bg-green" role="progressbar" style="width: ' + Math.round((value.totalInternal - value.freeInternal)*100/value.totalInternal) + 'px;"/>' +
                                           '</div>' +
                                           '</td>');
+          })
+        });
+
+      });
+    </script>
+
+    <!-- Tcp Connections Status -->
+    <script type="text/javascript">
+      $(function(){
+        var applianceId = 'all';
+        var dpandaGetTcpConnectionsStatus = '/dpanda/api/status/tcpConnections?applianceId=' + applianceId;
+        $.get(dpandaGetTcpConnectionsStatus)
+        .fail(function(){
+          //Handle error
+        })
+        .done(function(tcpConnectionsStatusResponse) {
+          $.each(tcpConnectionsStatusResponse['data'], function(index,value){
+            $("#tcpConnections").append('<td>' + value.established + '</td>');
           })
         });
 
@@ -452,44 +481,6 @@
 
       });
 
-    </script>
-
-    <script type="text/javascript">
-      var updateTime;
-      var currentTime;
-      var dpandaGetDateTime = '/dpanda/api/status/dateTime';
-
-      function displayClock() {
-        if (currentTime - updateTime > 300000) {
-          $.get(dpandaGetDateTime)
-          .fail(function(){
-            //Handle error
-          })
-          .done(function(dateTimeResponse) {
-            updateTime = new Date(Date.parse(dateTimeResponse["timestamp"]));
-            currentTime = updateTime;
-          });
-        };
-        currentTime =  new Date(currentTime.getTime() + 1000);
-        document.getElementById("clock").innerHTML = currentTime.toUTCString();
-        proceed=setTimeout(displayClock,1000);
-      };
-
-
-      var initFunc = function(){
-        $.get(dpandaGetDateTime)
-        .fail(function(){
-          //Handle error
-        })
-        .done(function(dateTimeResponse) {
-          updateTime = new Date(Date.parse(dateTimeResponse["timestamp"]));
-          currentTime = updateTime;
-          document.getElementById("clock").innerHTML = currentTime.toUTCString();
-          proceed=setTimeout(displayClock,1000);
-        });
-
-      }
-      $(initFunc);
     </script>
   </body>
 </html>
