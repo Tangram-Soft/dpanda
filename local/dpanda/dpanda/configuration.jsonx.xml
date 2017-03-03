@@ -20,7 +20,19 @@
             </json:array>
             <json:array name="serviceTypes">
                 <json:object>
-                    <json:string name="name">bla</json:string>
+                    <json:string name="name">MultiProtocolGateway</json:string>
+                    <json:string name="monitor">true</json:string>
+                </json:object>
+                <json:object>
+                    <json:string name="name">WebServiceProxy</json:string>
+                    <json:string name="monitor">true</json:string>
+                </json:object>
+                <json:object>
+                    <json:string name="name">XMLFirewallService</json:string>
+                    <json:string name="monitor">true</json:string>
+                </json:object>
+                <json:object>
+                    <json:string name="name">MQQM</json:string>
                     <json:string name="monitor">true</json:string>
                 </json:object>
             </json:array>
@@ -30,14 +42,14 @@
             </json:array>
         </json:object>
         <json:object name="applicatonBackup">
-            <json:string name="remoteUrl">bla</json:string>
+            <json:string name="remoteUrl"></json:string>
             <json:array name="domainsToBackup">
                 <json:string>default</json:string>
-                <json:string>panda</json:string>
+                <json:string>dpanda</json:string>
             </json:array>
         </json:object>
         <json:object name="secureBackup">
-            <json:string name="remoteUrl">bla</json:string>
+            <json:string name="remoteUrl"></json:string>
         </json:object>
         <json:object name="synchronization"/>
     </json:object>

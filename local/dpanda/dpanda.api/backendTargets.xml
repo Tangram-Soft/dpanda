@@ -1,1 +1,1 @@
-<BackendTargets/>
+<BackendTargets><RemoteTarget domain="Guy" name="JSTesy" class="MultiProtocolGateway" host="173.17.2.2" port="1233"/><RemoteTarget domain="Guy" name="barcode" class="WebServiceProxy" host="www.webservicex.net" port="80"/><RemoteTarget domain="Guy" name="Weather" class="WebServiceProxy" host="www.webservicex.com" port="80"/><RemoteTarget domain="Guy" name="QM.LAB" class="MQQM" host="172.17.0.5" port="1414"/></BackendTargets>

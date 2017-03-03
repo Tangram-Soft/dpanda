@@ -12,10 +12,11 @@
 
   <xsl:param name="xmlMgmtInterface" select="'https://dpanda.xml.mgmt:5550/service/mgmt/3.0'"/>
   <xsl:param name="excludeDomainslist">
-    <xsl:for-each select="document('local://dpanda/configuration.xml')//excludeDomains/domain/@name">
+    <xsl:for-each select="document('local://dpanda/configuration.jsonx.xml')//*[local-name()='array'][@name='excludedDomains']/*[local-name()='string']/text()">
       <xsl:value-of select="."/>
     </xsl:for-each>
   </xsl:param>
+
   <dp:set-variable name="'var://context/mappedList/data'" value="''"/>
   <xsl:variable name="pwd64" select="dp:encode('dpanda:dpanda','base-64')"/>
   <xsl:variable name="basicAuth" select="concat('Basic ',$pwd64)"/>
@@ -197,14 +198,16 @@
        <xsl:for-each select="exslt:node-set($domainList)/domainList/appDomain">
          <xsl:variable name="currentDomain" select="./text()"/>
          <xsl:variable name="handleLoadBalancerGroup" select="dpa:handleLBG($currentDomain)"/>
-         <xsl:for-each select="document('local://dpanda/configuration.xml')//serviceTypes/serviceType[@monitor='true']/@name">
-          <xsl:variable name="result" select="dpa:retriveBackendHost($currentDomain, .)"/>
-            <xsl:copy-of select="$result"/>
+         <xsl:for-each select="document('local://dpanda/configuration.jsonx.xml')//*[local-name()='array'][@name='serviceTypes']/*[local-name()='object']">
+          <xsl:if test="./*[local-name()='string'][@name='monitor']/text()= 'true'">
+            <xsl:variable name="result" select="dpa:retriveBackendHost($currentDomain, ./*[local-name()='string'][@name='name']/text())"/>
+              <xsl:copy-of select="$result"/>
+          </xsl:if>
         </xsl:for-each>
        </xsl:for-each>
-       <xsl:for-each select="document('local://dpanda/configuration.xml')//staticTargets/remoteTarget">
+       <!-- <xsl:for-each select="document('local://dpanda/configuration.xml')//staticTargets/remoteTarget">
          <xsl:copy-of select="."/>
-       </xsl:for-each>
+       </xsl:for-each> -->
       </BackendTargets>
      </xsl:variable>
      <func:result select="dpa:buildJson($backendTargets)"/>

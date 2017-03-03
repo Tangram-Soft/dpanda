@@ -1,0 +1,43 @@
+{
+	"appliances": [{
+		"id": "1",
+		"host-name": "idg.dpanda",
+		"host-ip": "172.17.0.2",
+		"monitor": "true"
+	}],
+	"features": {
+		"backendMonitor": {
+			"staticTargets": [{
+				"domain": "true",
+				"name": "sd",
+				"class": "sad",
+				"host": "sda"
+			}],
+			"serviceTypes": [{
+				"name": "MultiProtocolGateway",
+				"monitor": "true"
+			},{
+				"name": "WebServiceProxy",
+				"monitor": "true"
+			},
+			{
+				"name": "XMLFirewallService",
+				"monitor": "true"
+			},
+			{
+				"name": "MQQM",
+				"monitor": "true"
+			}
+				],
+			"excludedDomains": ["default", "dpanda"]
+		},
+		"applicatonBackup": {
+			"remoteUrl": "",
+			"domainsToBackup": ["default", "panda"]
+		},
+		"secureBackup": {
+			"remoteUrl": ""
+		},
+		"synchronization": {}
+	}
+}
