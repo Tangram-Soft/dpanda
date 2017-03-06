@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>dPanda's WebIDE</title>
+    <link rel="stylesheet" href="css/webIDE.css"></link>
+	<link rel="stylesheet" href="vendors/jquery/dist/jquery-ui.css"></link>
+	<script src="vendors/jquery/dist/jquery-3.1.1.min.js" type="text/javascript"></script>
+	<script src="vendors/jquery/dist/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="vendors/ace/ace.js" type="text/javascript"></script>
+	<script src="js/webIDE.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="editor">
+			<div id="editor-toolbar"><button id="btn-new">New</button><button id="btn-load">Load</button><button id="btn-save">Save</button><button id="btn-run">Run</button> Transformation Type <select id="slct-transformation-type"><option value="XSL">XSL</option><option value="GatewayScript">GatewayScript</option></select></div>
+			<div id="editor-area"></div>
+		</div>
+		<div id="tester">
+			<div id="request-pane" class="tabs">
+				<ul>
+					<li><a href="#request-area">Request Body</a></li>
+					<li><a href="#request-headers">Request HTTP Headers</a></li>
+					<li><a href="#request-options">Options</a></li>
+					<li><a href="#request-tools">Tools</a></li>
+				</ul>
+				<div id="request-area"></div>
+				<div id="request-headers"></div>
+				<div id="request-options">
+					<input type="checkbox" id="chk-request-word-wrap" /> Word Wrap
+				</div>
+				<div id="request-tools">
+					<strong>Basic Auth Header:</strong><br />
+					<table>
+						<tr><td>Username:</td><td><input type="text" id="txt-basic-auth-username" class="ui-corner-all" /></td>
+							<tr><td>Password:</td><td><input type="password" id="txt-basic-auth-password" class="ui-corner-all" /></td>
+					</table>
+					<button id="btn-basic-auth-header" class="ui-corner-all">Add Header</button>
+					<br /><br />
+					<strong>Base64 Encode/Decoder:</strong><br />
+					<textarea id="txt-base64" class="ui-corner-all"></textarea><br />
+					<button id="btn-base64-encode">Encode</button> <button id="btn-base64-decode">Decode</button>
+				</div>
+			</div>
+			<div id="response-pane" class="tabs">
+				<ul>
+					<li><a href="#response-area">Response Body</a></li>
+					<li><a href="#response-headers">Response HTTP Headers</a></li>
+					<li><a href="#response-options">Options</a></li>
+				</ul>
+				<div id="response-area"></div>
+				<div id="response-headers"></div>
+				<div id="response-options">
+					<input type="checkbox" id="chk-response-word-wrap" /> Word Wrap
+				</div>
+			</div>
+		</div>
+		<div id="bottom">
+			<div id="status"></div>
+			<div id="copyright">&copy; Tangram-Soft</div>
+		</div>
+	</div>
+	<div id="dialog"></div>
+</body>
+</html>
