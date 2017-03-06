@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <json:object xsi:schemaLocation="http://www.datapower.com/schemas/json jsonx.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:json="http://www.ibm.com/xmlns/prod/2009/jsonx">
     <json:array name="appliances">
-        <json:object>
-            <json:string name="id">1</json:string>
-            <json:string name="host-name">idg.dpanda</json:string>
-            <json:string name="host-ip">172.17.0.2</json:string>
-            <json:string name="monitor">true</json:string>
-        </json:object>
+      <json:object>
+          <json:string name="id">1</json:string>
+          <json:string name="host-name">idg.dpanda</json:string>
+          <json:string name="host-ip">172.17.0.2</json:string>
+          <json:string name="monitor">true</json:string>
+      </json:object>
     </json:array>
     <json:object name="features">
         <json:object name="backendMonitor">
