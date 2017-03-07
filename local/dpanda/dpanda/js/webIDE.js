@@ -16,6 +16,8 @@ window.resizeTo(screen.width,screen.height);
 
 $(function() {
 
+	$('#middle').enhsplitter({minSize: 50, invisible: true, height: "87%", position: $(document).width()*0.6});
+	$('#tester').enhsplitter({minSize: 50, vertical: false, invisible: true, height: "100%"});
 	$("#dialog").dialog({ closeOnEscape: false, autoOpen: false, create: function (event, ui) { $(".ui-widget-header").hide(); } });
 
 	$(".tabs").tabs();
@@ -25,10 +27,7 @@ $(function() {
 	codeEditor.$blockScrolling = Infinity;
 	codeEditor.session.setMode("ace/mode/xml");
 	codeEditor.renderer.setScrollMargin(10, 10);
-	codeEditor.setOptions({
-		// "scrollPastEnd": 0.8,
-		autoScrollEditorIntoView: true
-	});
+	codeEditor.setOptions({ autoScrollEditorIntoView: true 	});
 
 	var requestEditor = ace.edit("request-area");
 	requestEditor.setTheme("ace/theme/twilight");
@@ -40,6 +39,7 @@ $(function() {
 	var requestHeadersEditor = ace.edit("request-headers");
 	requestHeadersEditor.setTheme("ace/theme/twilight");
 	requestHeadersEditor.$blockScrolling = Infinity;
+	requestHeadersEditor.renderer.setScrollMargin(10, 10);
 
 	var responseEditor = ace.edit("response-area");
 	responseEditor.setTheme("ace/theme/twilight");
@@ -51,6 +51,7 @@ $(function() {
 	var responseHeadersEditor = ace.edit("response-headers");
 	responseHeadersEditor.setTheme("ace/theme/twilight");
 	responseHeadersEditor.$blockScrolling = Infinity;
+	responseHeadersEditor.renderer.setScrollMargin(10, 10);
 
 	$("#btn-new").button({icons: {secondary: "ui-icon-document"}}).click(function() {
 
@@ -97,9 +98,9 @@ $(function() {
 	$("#btn-save").button({icons: {secondary: "ui-icon-disk"}}).click(function() {
 
 		var url = baseUrl + saveUrl;
-		var filename = '';
-		if (transformationType == "XSL") filename = 'local:///dpanda.ide/transform.xsl';
-		else if (transformationType == "GatewayScript") filename = 'local:///dpanda.ide/transform.js';
+		var filename = 'local:///dpanda.ide/transform.';
+		if (transformationType == "XSL") filename += 'xsl';
+		else if (transformationType == "GatewayScript") filename += 'js';
 
 		url = url + filename;
 
@@ -138,7 +139,13 @@ $(function() {
 				for (i = 0; i < headers.length; ++i)
 				{
 					var splitted = headers[i].split(":");
-					if (splitted.length > 1) xhr.setRequestHeader(splitted[0].trim(), splitted[1].trim());
+					if (splitted.length > 1)
+					{
+						var currHeaderValue = "";
+						for (j = 1; j < splitted.length; ++j) currHeaderValue += splitted[j].trim() + ":";
+						currHeaderValue = currHeaderValue.substring(0, currHeaderValue.length-1);
+						xhr.setRequestHeader(splitted[0].trim(), currHeaderValue);
+					}
 				}
 			},
 			contentType: getRequestHeader("Content-Type"),
@@ -203,7 +210,8 @@ $(function() {
 		requestHeadersEditor.setValue(updatedHeaders, 1);
 	}
 
-	function status(value) { $("#status").html(value); }
+	function status(value) { var dt = new Date(); var datetime = pad0(dt.getDate()) + "/" + (pad0(dt.getMonth()+1))  + "/" + dt.getFullYear() + " " + pad0(dt.getHours()) + ":" + pad0(dt.getMinutes()) + ":" + pad0(dt.getSeconds()); $("#status").html(datetime + " - " + value); }
+	function pad0 (value) { if (value > 9) return value; return "0" + value; }
 
 	$("#btn-base64-encode").button({icons: {secondary: "ui-icon-shuffle"}}).click(function() { $("#txt-base64").val(Base64.encode($("#txt-base64").val())); status("Base64 string was encoded.");	});
 	$("#btn-base64-decode").button({icons: {secondary: "ui-icon-refresh"}}).click(function() { $("#txt-base64").val(Base64.decode($("#txt-base64").val())); status("Base64 string was decoded.");	});
