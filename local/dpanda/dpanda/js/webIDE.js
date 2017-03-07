@@ -9,14 +9,14 @@ var loadXslUrl = "../dpanda.ide/transform.xsl";
 var loadGatewayScriptUrl = "../dpanda.ide/transform.js";
 var saveUrl = "api/filestore/file?filename=";
 var runXslUrl = "ide/runXsl";
-var runGatewayScriptUrl = "ide/runGWS";
+var runGatewayScriptUrl = "ide/runGws";
 
 window.moveTo(0,0);
 window.resizeTo(screen.width,screen.height);
 
 $(function() {
 
-	$('#middle').enhsplitter({minSize: 50, invisible: true, height: "87%", position: $(document).width()*0.6});
+	$('#middle').enhsplitter({minSize: 50, invisible: true, height: "calc(100% - 30px)", position: $(document).width()*0.6});
 	$('#tester').enhsplitter({minSize: 50, vertical: false, invisible: true, height: "100%"});
 	$("#dialog").dialog({ closeOnEscape: false, autoOpen: false, create: function (event, ui) { $(".ui-widget-header").hide(); } });
 
@@ -65,6 +65,7 @@ $(function() {
 		$.ajax({
 			url: url,
 			type: "get",
+			dataType: "text",
 			success: function(response){
 				$("#dialog").dialog("close");
 				codeEditor.setValue(response, 1);
@@ -153,8 +154,16 @@ $(function() {
 			data: requestEditor.getValue(),
 		}).always(function(response, stat, xhr){
 				$("#dialog").dialog("close");
-				responseEditor.setValue(response, 1);
-				responseHeadersEditor.setValue(xhr.getAllResponseHeaders(), 1);
+				if (stat == "error")
+				{
+					responseEditor.setValue(response.responseText, 1);
+					responseHeadersEditor.setValue(response.getAllResponseHeaders(), 1);
+				}
+				else
+				{
+					responseEditor.setValue(response, 1);
+					responseHeadersEditor.setValue(xhr.getAllResponseHeaders(), 1);
+				}
 				status(transformationType + " transformation has finished running.");
 			});
 	});
