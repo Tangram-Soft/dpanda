@@ -20,21 +20,49 @@ session.input.readAsBuffer (function (readAsBufferError, buffer) {
 
         options.target = baseUrl + "header.html";
         urlopen.open(options, function(headerError, header) {
-            if (headerError) console.error("urlopen error: " + JSON.stringify(error));
+            if (headerError) console.error("urlopen error: " + JSON.stringify(headerError));
             else {
                 header.readAsBuffer(function(headerReadAsBufferError, headerContent){
                     if (headerReadAsBufferError) console.error("urlopen error: " + JSON.stringify(headerReadAsBufferError));
                     else {
                         options.target = baseUrl + page;
                         urlopen.open(options, function(pageError, page) {
-                            if (pageError) console.error("urlopen error: " + JSON.stringify(error));
+                            if (pageError) console.error("urlopen error: " + JSON.stringify(pageError));
+                            else if (page.statusCode == 404) {
+                              options.target = baseUrl + "/page_404.html";
+                              urlopen.open(options, function(notFoundError, notFoundPage) {
+                                if (notFoundError) console.error("urlopen error: " + JSON.stringify(notFoundError));
+                                else {
+                                  notFoundPage.readAsBuffer(function(notFoundPageBufferError, notFoundPageContent){
+                                    if (notFoundPageBufferError) console.error("readAsBufferError: " + JSON.stringify(notFoundPageBufferError));
+                                    else {
+                                      session.output.write(notFoundPageContent);
+                                    }
+                                  });
+                                }
+                              });
+                            }
+                            else if (page.statusCode == 500) {
+                              options.target = baseUrl + "/page_500.html";
+                              urlopen.open(options, function(errorPageError, errorPage) {
+                                if (errorPageError) console.error("urlopen error: " + JSON.stringify(errorPageError));
+                                else {
+                                  errorPage.readAsBuffer(function(errorPageBufferError, errorPageContent){
+                                    if (errorPageBufferError) console.error("readAsBufferError: " + JSON.stringify(errorPageBufferError));
+                                    else {
+                                      session.output.write(errorPageError);
+                                    }
+                                  });
+                                }
+                              });
+                            }
                             else {
                                 page.readAsBuffer(function(pageReadAsBufferError, pageContent){
                                     if (pageReadAsBufferError) console.error("urlopen error: " + JSON.stringify(error));
                                     else {
                                         options.target = baseUrl + "footer.html";
                                         urlopen.open(options, function(footerError, footer) {
-                                            if (footerError) console.error("urlopen error: " + JSON.stringify(error));
+                                            if (footerError) console.error("urlopen error: " + JSON.stringify(footerError));
                                             else {
                                                 footer.readAsBuffer(function(footerReadAsBufferError, footerContent){
                                                     if (footerReadAsBufferError) console.error("urlopen error: " + JSON.stringify(error));
@@ -46,7 +74,7 @@ session.input.readAsBuffer (function (readAsBufferError, buffer) {
                                         });
                                     }
                                 });
-                            }
+                              }
                         });
                     }
                 });
