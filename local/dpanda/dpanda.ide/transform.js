@@ -1,46 +1,15 @@
 
-
+// This is a new GatewayScript transformation file.
 var sm = require('service-metadata');
-var uri = sm.getVar('var://service/URI');
-var urlopen = require('urlopen');
+var routingUrl = sm.getVar('var://service/routing-url');
 
-var baseUrl = "http://dpanda.localhost:65010/dpanda/";
-var options = { method: 'GET', contentType: 'text/html'};
+session.input.readAsJSON (function (readAsJSONError, json) {
+    if (readAsJSONError) {
 
-var page = uri.replace("/dpanda/", "");
-session.output.write("URI: " + uri.replace("/dpanda/", ""));
-
-options.target = baseUrl + "header.html";
-urlopen.open(options, function(headerError, header) {
-    if (headerError) console.error("urlopen error: " + JSON.stringify(error));
+        session.output.write(readAsJSONError);
+    }
     else {
-        header.readAsBuffer(function(headerReadAsBufferError, headerContent){
-            if (headerReadAsBufferError) console.error("urlopen error: " + JSON.stringify(headerReadAsBufferError));
-            else {
-                options.target = baseUrl + page;
-                urlopen.open(options, function(pageError, page) {
-                    if (pageError) console.error("urlopen error: " + JSON.stringify(error));
-                    else {
-                        page.readAsBuffer(function(pageReadAsBufferError, pageContent){
-                            if (pageReadAsBufferError) console.error("urlopen error: " + JSON.stringify(error));
-                            else {
-                                options.target = baseUrl + "footer.html";
-                                urlopen.open(options, function(footerError, footer) {
-                                    if (footerError) console.error("urlopen error: " + JSON.stringify(error));
-                                    else {
-                                        footer.readAsBuffer(function(footerReadAsBufferError, footerContent){
-                                            if (footerReadAsBufferError) console.error("urlopen error: " + JSON.stringify(error));
-                                            else {
-                                                session.output.write(headerContent + "\n" + pageContent + "\n" + footerContent);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
+
+        session.output.write(JSON.stringify({"status": "ok"}));
     }
 });

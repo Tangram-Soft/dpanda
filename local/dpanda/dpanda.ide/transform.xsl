@@ -10,41 +10,16 @@
 	extension-element-prefixes="dp"
 	version="2.0">
 
-    <xsl:output method="html"/>
+	<!-- This is a new XSL transformation file. -->
+	<xsl:param name="dpconfig:my_param"/>
+	<dp:param name="dpconfig:my_param" type="dmString" xmlns="">
+		<display>my_param display text</display>
+		<default>my_param default value</default>
+		<description>Description for my_param</description>
+	</dp:param>
 
 	<xsl:template match="/">
-	    <!--
-	    <xsl:variable name="header">
-		    <xsl:include href="http://dpanda.localhost:65010/dpanda/header.html"/>
-		</xsl:variable>
-		-->
-		<xsl:variable name="test">
-		    <dp:url-open target="http://dpanda.localhost:65010/dpanda/header.html"
-                response="ignore"
-                data-type="base64"
-                content-type="text/html"
-                http-method="get">
-            </dp:url-open>
-		</xsl:variable>
-
-		<xsl:message dp:priority="warning">
-		    elad test
-		    <xsl:copy-of select="$test" />
-		    <!--<xsl:include href="http://dpanda.localhost:65010/dpanda/header.html"/>-->
-		</xsl:message>
-		<xsl:message dp:priority="error">
-		    <xsl:copy-of select="unparsed-text('http://dpanda.localhost:65010/dpanda/header.html', 'utf-8')"/>
-		</xsl:message>
-		
-        <xsl:copy-of select="$test" />
-        <xsl:copy-of select="unparsed-text('http://dpanda.localhost:65010/dpanda/header.html', 'utf-8')"/>
-        <xsl:copy-of select="unparsed-text('http://dpanda.localhost:65010/dpanda/index.html', 'utf-8')"/>
-        <xsl:copy-of select="unparsed-text('http://dpanda.localhost:65010/dpanda/footer.html', 'utf-8')"/>
-		
-		<!--
-		<xsl:include href="http://dpanda.localhost:65010/dpanda/index.html"/>
-		<xsl:include href="http://dpanda.localhost:65010/dpanda/footer.html"/>
-		-->
+		<xsl:message>Place your code here...</xsl:message>
 	</xsl:template>
 
 </xsl:stylesheet>
