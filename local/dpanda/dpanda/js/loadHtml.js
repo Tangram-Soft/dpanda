@@ -1,4 +1,4 @@
-on.input.readAsBuffer (function (readAsBufferError, buffer) {
+session.input.readAsBuffer (function (readAsBufferError, buffer) {
     if (readAsBufferError) { console.log(readAsBufferError); }
     else {
       if (buffer != "") session.output.write(buffer);
