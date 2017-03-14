@@ -19,7 +19,7 @@
 	</dp:param>
 
 	<xsl:template match="/">
-		<xsl:message>Place your code here...</xsl:message>
+		testing...
 	</xsl:template>
 
 </xsl:stylesheet>

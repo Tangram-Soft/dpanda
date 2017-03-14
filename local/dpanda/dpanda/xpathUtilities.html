@@ -1,0 +1,94 @@
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="x_content">
+            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+              <ul id="xpathTabs" class="nav nav-tabs bar_tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#xpath-tester-content" id="xpath-validator-title" role="tab" data-toggle="tab" aria-expanded="true">XPath Tester</a></li>
+                <li role="presentation" class=""><a href="#xpath-generator-content" role="tab" id="xpath-generator-title" data-toggle="tab" aria-expanded="false">XPath Generator</a></li>
+                </li>
+              </ul>
+              <div id="xpathTabsContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="xpath-tester-content" aria-labelledby="home-tab">
+                  <p>
+                    <label for="txt-xpath-tester-input">Insert (or paste) any XML input:</label>
+                    <textarea id="txt-xpath-tester-input" required="required" class="form-control" style="height: 280px;">
+<root>
+   <x>green</x>
+   <y>
+      <x>blue</x>
+      <x>blue</x>
+   </y>
+   <z>
+      <x>red</x>
+      <x>red</x>
+   </z>
+   <x>green</x>
+</root>
+                    </textarea>
+                    <br />
+                    <label for="txt-xpath--tester-expression">Insert (or paste) your XPath expression:</label>
+                    <textarea id="txt-xpath-tester-expression" required="required" class="form-control" style="height: 100px;">
+/*[local-name()='root']/*[local-name()='x']
+                    </textarea>
+                    <br />
+                    <button id="btn-xpath-tester-test" type="button" class="btn btn-primary">Test</button>
+                    <br /><br />
+                    <label for="txt-xpath-tester-result">XPath expression result:</label>
+                    <textarea id="txt-xpath-tester-result" required="required" class="form-control" style="height: 200px;"></textarea>
+                  </p>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="xpath-generator-content" aria-labelledby="profile-tab">
+                  <p>
+                    <label for="xpath-generator-namespace-handling">Namespace Handling:</label>
+                    <div id="xpath-generator-namespace-handling" name="xpath-generator-namespace-handling" class="btn-group" data-toggle="buttons">
+                      <input type="radio" class="flat" id="xpath-generator-namespace-handling-local" name="xpath-generator-namespace-handling" value="local" checked /> Local
+                      <input type="radio" class="flat" id="xpath-generator-namespace-handling-prefix" name="xpath-generator-namespace-handling" value="prefix" /> Prefix
+                      <input type="radio" class="flat" id="xpath-generator-namespace-handling-uri" name="xpath-generator-namespace-handling" value="uri" /> URI
+                    </div>
+                    <br /><br />
+                    <label for="txt-path-generator-xml-input">Insert (or paste) your XML sample:</label>
+                    <textarea id="txt-path-generator-xml-input" required="required" class="form-control" style="height: 280px;"></textarea>
+                    <br />
+                    <button id="btn-xpath-generator-parse" type="button" class="btn btn-primary">Parse</button>
+                    <br /><br />
+                    <label for="txt-xpath-generator-result">Generated XPath expression:</label>
+                    <textarea id="txt-xpath-generator-result" required="required" class="form-control" style="height: 200px;"></textarea>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+    <script type="text/javascript">
+    $( function() {
+
+      $("#btn-xpath-tester-test").click(function(){
+
+        var xmlContent = $.parseXML( $("#txt-xpath-tester-input").val() );
+        var xpathResult = xmlContent.evaluate($("#txt-xpath-tester-expression").val(), xmlContent, null, XPathResult.ANY_TYPE, null );
+        var txtResult = "";
+        try {
+          var currNode = xpathResult.iterateNext();
+          while (currNode) {
+            txtResult += currNode.outerHTML + "\r\n";
+            currNode = xpathResult.iterateNext();
+          }
+        }
+        catch (e) {
+          dump( 'Error: Document tree modified during iteration ' + e );
+        }
+        $("#txt-xpath-tester-result").val(txtResult);
+      });
+
+      $("#btn-xpath-generator-parse").click(function(){
+        var namespaceHandling = "";
+        if ($("#xpath-generator-namespace-handling-local").prop("checked")) namespaceHandling = "local";
+        else if ($("#xpath-generator-namespace-handling-prefix").prop("checked")) namespaceHandling = "prefix";
+        else if ($("#xpath-generator-namespace-handling-uri").prop("checked")) namespaceHandling = "uri";
+        $("#txt-xpath-generator-result").val("Selected Namespace Handling: " + namespaceHandling + "\r\nSorry, unimplemented yet...");
+      });
+
+    });
+    </script>
