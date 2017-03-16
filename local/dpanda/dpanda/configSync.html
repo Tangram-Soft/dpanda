@@ -1,0 +1,40 @@
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <h3>Configuration Synchronization</h3>
+          <div class="x_content">
+            <div class="form-group">
+              <br />
+              <label for="slct-source-datapower">Source DataPower:</label>
+              <div style="width: 250px;">
+                <select id="slct-source-datapower" class="form-control">
+                  <option>Machine 1</option>
+                  <option>Machine 2</option>
+                  <option>Machine 3</option>
+                </select>
+                <br />
+                <label for="slct-destination-datapower">Destination DataPower:</label>
+                <div style="width: 250px;">
+                  <select id="slct-destination-datapower" class="form-control">
+                    <option>Machine 1</option>
+                    <option>Machine 2</option>
+                    <option>Machine 3</option>
+                  </select>
+                </div>
+              </div>
+              <br />
+              <button id="btn-sync" type="button" class="btn btn-primary">Sync Configuration</button>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+    <script type="text/javascript">
+    $( function() {
+
+      $("#btn-sync").click(function(){
+        if ($("#slct-source-datapower").val() == $("#slct-destination-datapower").val()) { alert("The source DataPower must be different that the destination DataPower"); return; }
+        alert("Unimplemented yet");
+      });
+
+    });
+    </script>

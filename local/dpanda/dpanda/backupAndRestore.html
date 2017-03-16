@@ -1,0 +1,141 @@
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <h3>Backup &amp; Restore</h3>
+          <div class="x_content">
+            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+              <ul id="xpathTabs" class="nav nav-tabs bar_tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#backup-content" id="backup-title" role="tab" data-toggle="tab" aria-expanded="true">Backup</a></li>
+                <li role="presentation" class=""><a href="#restore-content" role="tab" id="restore-title" data-toggle="tab" aria-expanded="false">Restore</a></li>
+                </li>
+              </ul>
+              <div id="tabsContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="backup-content" aria-labelledby="home-tab">
+                  <p>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="x_panel">
+                          <div class="x_title">
+                            <h2>Backup</h2>
+                            <div class="clearfix"></div>
+                          </div>
+                          <div class="x_content">
+                            <form data-parsley-validate class="form-horizontal form-label-left">
+                              <h5>Scheduled Backup:</h5>
+                              <div class="form-group">
+                                <label for="slct-scheduled-backup-domain">Domain to backup:</label>
+                                <div style="width: 250px;">
+                                  <select id="slct-scheduled-backup-domain" class="form-control">
+                                    <option>All Domains</option>
+                                    <option>Domain 1</option>
+                                    <option>Domain 2</option>
+                                    <option>Domain 3</option>
+                                    <option>Domain 4</option>
+                                  </select>
+                                </div>
+                                <br />
+                                <label for="slct-scheduled-backup-interval">Backup interval (Hours):</label>
+                                <div style="width: 250px;">
+                                  <input type="text" class="form-control" placeholder="24">
+                                </div>
+                              </div>
+                              <button id="btn-schedule-backup" type="button" class="btn btn-primary">Set</button>
+                              <br /><br />
+                              <h5>Backup Now:</h5>
+                              <div class="form-group">
+                                <label for="slct-backup-now-domain">Domain to backup:</label>
+                                <div style="width: 250px;">
+                                  <select id="slct-backup-now-domain" class="form-control">
+                                    <option>All Domains</option>
+                                    <option>Domain 1</option>
+                                    <option>Domain 2</option>
+                                    <option>Domain 3</option>
+                                    <option>Domain 4</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <button id="btn-backup-now" type="button" class="btn btn-primary">Backup Now</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="x_panel">
+                          <div class="x_title">
+                            <h2>Secure Backup</h2>
+                            <div class="clearfix"></div>
+                          </div>
+                          <div class="x_content">
+                            <form data-parsley-validate class="form-horizontal form-label-left">
+                              <h5>Scheduled Secure Backup:</h5>
+                              <div class="form-group">
+                                <label for="slct-scheduled-secure-backup-domain">Domain to backup:</label>
+                                <div style="width: 250px;">
+                                  <select id="slct-scheduled-secure-backup-domain" class="form-control">
+                                    <option>All Domains</option>
+                                    <option>Domain 1</option>
+                                    <option>Domain 2</option>
+                                    <option>Domain 3</option>
+                                    <option>Domain 4</option>
+                                  </select>
+                                </div>
+                                <br />
+                                <label for="slct-scheduled-secure-backup-interval">Secure Backup interval (Hours):</label>
+                                <div style="width: 250px;">
+                                  <input type="text" class="form-control" placeholder="24">
+                                </div>
+                              </div>
+                              <button id="btn-schedule-secure-backup" type="button" class="btn btn-primary">Set</button>
+                              <br /><br />
+                              <h5>Backup Now:</h5>
+                              <div class="form-group">
+                                <label for="slct-secure-backup-now-domain">Domain to backup:</label>
+                                <div style="width: 250px;">
+                                  <select id="slct-secure-backup-now-domain" class="form-control">
+                                    <option>All Domains</option>
+                                    <option>Domain 1</option>
+                                    <option>Domain 2</option>
+                                    <option>Domain 3</option>
+                                    <option>Domain 4</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <button id="btn-secure-backup-now" type="button" class="btn btn-primary">Secure Backup Now</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </p>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="restore-content" aria-labelledby="profile-tab">
+                  <p>
+                    Sorry, not implemented yet...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+    <script type="text/javascript">
+    $( function() {
+
+      $("#btn-schedule-backup").click(function(){
+        alert("Unimplemented yet");
+      });
+
+      $("#btn-backup-now").click(function(){
+        alert("Unimplemented yet");
+      });
+
+      $("#btn-schedule-secure-backup").click(function(){
+        alert("Unimplemented yet");
+      });
+
+      $("#btn-secure-backup-now").click(function(){
+        alert("Unimplemented yet");
+      });
+
+    });
+    </script>
