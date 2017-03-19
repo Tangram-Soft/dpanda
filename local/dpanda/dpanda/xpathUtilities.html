@@ -40,8 +40,9 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="xpath-generator-content" aria-labelledby="profile-tab">
                   <p>
-                    <label for="xpath-generator-namespace-handling">Namespace Handling:</label>
-                    <div id="xpath-generator-namespace-handling" name="xpath-generator-namespace-handling" class="btn-group" data-toggle="buttons">
+                    <label for="xpath-generator-namespace-handling">Namespace Handling (Don't forget to re-render after changing):</label>
+                    <!--<div id="xpath-generator-namespace-handling" name="xpath-generator-namespace-handling" class="btn-group" data-toggle="buttons">-->
+                    <div id="xpath-generator-namespace-handling" name="xpath-generator-namespace-handling" class="btn-group">
                       <input type="radio" class="flat" id="xpath-generator-namespace-handling-local" name="xpath-generator-namespace-handling" value="local" checked /> Local
                       <input type="radio" class="flat" id="xpath-generator-namespace-handling-prefix" name="xpath-generator-namespace-handling" value="prefix" /> Prefix
                       <input type="radio" class="flat" id="xpath-generator-namespace-handling-uri" name="xpath-generator-namespace-handling" value="uri" /> URI
@@ -50,7 +51,10 @@
                     <label for="txt-path-generator-xml-input">Insert (or paste) your XML sample:</label>
                     <textarea id="txt-path-generator-xml-input" required="required" class="form-control" style="height: 280px;"></textarea>
                     <br />
-                    <button id="btn-xpath-generator-parse" type="button" class="btn btn-primary">Parse</button>
+                    <button id="btn-xpath-generator-parse" type="button" class="btn btn-primary">Render XML</button>
+                    <br /><br />
+                    <label for="txt-path-generator-xml-input">Rendered XML:</label>
+                    <div id="rendered">Nothing to render yet...</div>
                     <br /><br />
                     <label for="txt-xpath-generator-result">Generated XPath expression:</label>
                     <textarea id="txt-xpath-generator-result" required="required" class="form-control" style="height: 200px;"></textarea>
@@ -60,36 +64,129 @@
             </div>
           </div>
         </div>
+        <link type="text/css" href="css/xpathUtilities.css" rel="stylesheet">
         <!-- /page content -->
 
+    <script type="text/javascript" src="vendors/jquery.xpath/jquery.xpath.min.js"></script>
     <script type="text/javascript">
+    var namespaceUris;
     $( function() {
 
       $("#btn-xpath-tester-test").click(function(){
 
-        var xmlContent = $.parseXML( $("#txt-xpath-tester-input").val() );
-        var xpathResult = xmlContent.evaluate($("#txt-xpath-tester-expression").val(), xmlContent, null, XPathResult.ANY_TYPE, null );
-        var txtResult = "";
-        try {
-          var currNode = xpathResult.iterateNext();
-          while (currNode) {
-            txtResult += currNode.outerHTML + "\r\n";
-            currNode = xpathResult.iterateNext();
+        parser = new DOMParser();
+        xmlDoc = parser.parseFromString($("#txt-xpath-tester-input").val(),"text/xml");
+        if (xmlDoc.documentElement.childNodes.length  > 0 && xmlDoc.documentElement.childNodes[0].nodeName == "parsererror")
+        {
+          $("#txt-xpath-tester-result").val("XML Error:\r\n" + xmlDoc.documentElement.childNodes[0].childNodes[1].innerHTML);
+        }
+        else
+        {
+          var sb = new Array();
+          try
+          {
+            var nodes = $($("#txt-xpath-tester-input").val()).xpath($("#txt-xpath-tester-expression").val());
+            for (var c = 0; c < nodes.length; c++) sb.push(nodes[c].nodeType == 3 ? nodes[c].wholeText : nodes[c].outerHTML);
+            $("#txt-xpath-tester-result").val(sb.join("\r\n"));
           }
+          catch (e) { $("#txt-xpath-tester-result").val("XPath expression Error:\r\n" + e.message); }
         }
-        catch (e) {
-          dump( 'Error: Document tree modified during iteration ' + e );
-        }
-        $("#txt-xpath-tester-result").val(txtResult);
       });
 
+      function handleChildNode(node, path, namespaceHandling)
+      {
+        var quot = '&quot;';
+        var html = "";
+        var hasChilds = false;
+
+        switch (namespaceHandling)
+        {
+          case "local":
+            var local = node.nodeName;
+            if (node.nodeName.indexOf(":") !== -1) local = node.nodeName.split(":")[1];
+            path += "/*[local-name()='" + local + "']";
+            break;
+          case "prefix":
+            path += "/" + node.nodeName;
+            break;
+          case "uri":
+            var namespace = "", local = "";
+            if (node.nodeName.indexOf(":") !== -1)
+            {
+              namespace = node.nodeName.split(":")[0];
+              local = node.nodeName.split(":")[1];
+            }
+            if (namespace == "") path += "/" + node.nodeName;
+            else
+            {
+              var namespaceUri = node.getAttribute('xmlns:' + namespace);
+              if (namespaceUri != null) namespaceUris[namespace] = namespaceUri;
+              else namespaceUri = getNamespaceUri(namespace);
+              path += "/*[namespace-uri()='" + namespaceUri + "' and local-name()='" + local + "']";
+            }
+            break;
+        }
+        var nodeAttirbutes = "";
+        for (var i = 0; i < node.attributes.length; ++i)
+        {
+          if (node.attributes[i].nodeName.indexOf("xmlns") === -1) nodeAttirbutes += " <a href=\"javascript:void(0)\" onclick=\"setXPathString(" + quot + path + "/@" + node.attributes[i].nodeName + quot + ");\"><span class=\"attribute-key\">" + node.attributes[i].nodeName + "</span></a>=\"<a href=\"javascript:void(0)\" onclick=\"setXPath(" + quot + path + "/@" + node.attributes[i].nodeName + quot + ");\"><span class=\"attribute-value\">" + node.attributes[i].nodeValue + "</span></a>\"";
+        }
+
+        for (var i = 0; i < node.childNodes.length; ++i) if (node.childNodes[i].nodeName != "#text") hasChilds = true;
+
+        if (hasChilds) html += "<li><a href=\"javascript:void(0)\" onclick=\"switchNode(this);return false\" class=\"parent-element\"><img src=\"images/minus.gif\" alt=\"\" class=\"switch\" height=\"10\" border=\"0\" ></a>&lt;<a href=\"javascript:void(0)\" onclick=\"setXPath(" + quot + path + quot + ");\"><span class=\"element\">" + node.nodeName + "</span></a> " + nodeAttirbutes + "&gt;<div><ul>";
+        else html += "<li>&lt;<a href=\"javascript:void(0)\" onclick=\"setXPath(" + quot + path + quot + ");\"><span class=\"element\">" + node.nodeName + "</span></a> " + nodeAttirbutes + "&gt;";
+
+        for (var i = 0; i < node.childNodes.length; ++i) if (node.childNodes[i].nodeName != "#text") html += handleChildNode(node.childNodes[i], path, namespaceHandling);
+
+        html += "<span class=\"text\"><a href=\"javascript:void(0)\" onclick=\"setXPath(" + quot + path + "[normalize-space(.) = '" + node.childNodes[0].nodeValue + "']" + quot + ");\">" + node.childNodes[0].nodeValue + "</a></span>";
+        if (hasChilds) html += "</ul></div>";
+        html += "&lt;/<span class=\"element\">" + node.nodeName + "</span>&gt;</li>";
+        return html;
+      }
+
       $("#btn-xpath-generator-parse").click(function(){
+
+        namespaceUris = {};
         var namespaceHandling = "";
         if ($("#xpath-generator-namespace-handling-local").prop("checked")) namespaceHandling = "local";
         else if ($("#xpath-generator-namespace-handling-prefix").prop("checked")) namespaceHandling = "prefix";
         else if ($("#xpath-generator-namespace-handling-uri").prop("checked")) namespaceHandling = "uri";
-        $("#txt-xpath-generator-result").val("Selected Namespace Handling: " + namespaceHandling + "\r\nSorry, unimplemented yet...");
-      });
+        var xml = $("#txt-path-generator-xml-input").val();
 
+        if (xml == "") { $("#rendered").html("Nothing to render yet..."); $("#txt-xpath-generator-result").val(""); return; }
+
+        parser = new DOMParser();
+        xmlDoc = parser.parseFromString(xml,"text/xml");
+        if (xmlDoc.documentElement.childNodes.length  > 0 && xmlDoc.documentElement.childNodes[0].nodeName == "parsererror")
+        {
+          $("#rendered").html(xmlDoc.documentElement.childNodes[0]);
+        }
+        else
+        {
+          var html = "<div class='renderXML'><ul>";
+          html += handleChildNode(xmlDoc.documentElement, "", namespaceHandling);
+          html += "</ul></div>";
+          $("#rendered").html(html);
+        }
+      });
     });
+
+    function getNamespaceUri(namespace)
+    {
+      if (namespace in namespaceUris) return namespaceUris[namespace];
+      return "";
+    }
+    function setXPath(s) { $("#txt-xpath-generator-result").val(s); }
+    function setXPathString(s) { $("#txt-xpath-generator-result").val("string(" + s + ")"); }
+    function switchNode(nodeRef)
+    {
+      var div = nodeRef.parentNode.getElementsByTagName("div").item(0);
+      var img = nodeRef.getElementsByTagName("img").item(0);
+      var display = div.style.display;
+      div.style.display = (display == "none") ? "block" : "none";
+      img.src = ( (display == "none") ? "images/minus.gif" : "images/plus.gif" );
+      img.alt = "";
+    }
+
     </script>

@@ -1,0 +1,92 @@
+div.renderXML
+{
+	background:none;
+	border:none;
+	bottom:auto;
+	clear:none;
+	cursor:default;
+	float:none;
+	/*font-family:Arial, Helvetica, sans-serif;*/
+	font-size:medium;
+	font-style:normal;
+	font-weight:normal;
+	height:auto;
+	left:auto;
+	letter-spacing:normal;
+	line-height:normal;
+	max-height:none;
+	max-width:none;
+	min-height:0;
+	min-width:0;
+	overflow:visible;
+	position:static;
+	right:auto;
+	text-align:left;
+	text-decoration:none;
+	text-indent:0;
+	text-transform:none;
+	top:auto;
+	visibility:visible;
+	white-space:normal;
+	width:auto;
+	z-index:auto;
+}
+        div.renderXML {
+    width: 100%;
+    border: 1px solid #000000;
+    padding: 4px;
+}
+
+div.renderXML ul {
+    list-style: none outside;
+}
+
+div.renderXML li {
+    list-style: none outside;
+    margin-left: -28px;
+    line-height: 1.25em;
+}
+
+div.renderXML .switch {
+    color: #C00;
+    font-family: monospace;
+    padding-right: 5px;
+}
+
+div.renderXML .element {
+    color: #900;
+}
+
+div.renderXML .comment {
+    color: #999;
+    font-family: monospace;
+}
+
+div.renderXML .text {
+    color: #000;
+    font-weight: bold;
+}
+
+div.renderXML .attribute-key {
+    color: #900;
+}
+
+div.renderXML .attribute-value {
+    color: #000;
+    font-weight: bold;
+}
+
+div.renderXML .namespace-key {
+    color: #C00;
+}
+
+div.renderXML .namespace-value {
+    color: #C00;
+    font-weight: bold;
+}
+
+div.renderXML a.parent-element {
+    color: #00f;
+    text-decoration: none;
+    margin-left: -13px;
+}
