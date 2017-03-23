@@ -8,7 +8,6 @@
 
       <!--id 1 should be the local DP, We should consider generate this element as part of the installization procces-->
       <appliance id="1" host-name="idg.dpanda" host-ip="172.17.0.2" dpanda.main-port="9080" monitor="true"/>
-      <appliance id="2" host-name="idg.dpanda2" host-ip="172.17.0.2" dpanda.main-port="9080" monitor="true"/>
     </appliances>
   </devices>
   <features>

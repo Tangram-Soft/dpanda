@@ -3,8 +3,8 @@
     <json:array name="appliances">
       <json:object>
           <json:string name="id">1</json:string>
-          <json:string name="host-name">idg.dpanda</json:string>
-          <json:string name="host-ip">172.17.0.2</json:string>
+          <json:string name="hostName">idg.dpanda</json:string>
+          <json:string name="hostIp">172.17.0.2</json:string>
           <json:string name="monitor">true</json:string>
       </json:object>
     </json:array>
@@ -12,10 +12,10 @@
         <json:object name="backendMonitor">
             <json:array name="staticTargets">
                 <json:object>
-                    <json:string name="domain">true</json:string>
-                    <json:string name="name">sd</json:string>
-                    <json:string name="class">sad</json:string>
-                    <json:string name="host">sda</json:string>
+                    <json:string name="domain">default</json:string>
+                    <json:string name="name">test</json:string>
+                    <json:string name="class">MultiProtocolGateway</json:string>
+                    <json:string name="host">http://google.com</json:string>
                 </json:object>
             </json:array>
             <json:array name="serviceTypes">

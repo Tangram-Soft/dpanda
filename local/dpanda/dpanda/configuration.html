@@ -1,6 +1,142 @@
         <!-- page content -->
         <div class="right_col" role="main">
+          <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Dpanda Configuration</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
 
+                  <div class="x_content">
+                    <div class="col-xs-3">
+                      <!-- required for floating -->
+                      <!-- Nav tabs -->
+                      <ul class="nav nav-tabs tabs-left">
+                        <li class="active"><a href="#appliances" data-toggle="tab" aria-expanded="true">Cluster</a>
+                        </li>
+                        <li class=""><a href="#backendMonitor" data-toggle="tab" aria-expanded="false">Backend Monitor</a>
+                        </li>
+                        <li class=""><a href="#appBackup" data-toggle="tab" aria-expanded="false">Logging</a>
+                        </li>
+                        <li class=""><a href="#secureBackup" data-toggle="tab" aria-expanded="false">some conf</a>
+                        </li>
+                        <li class=""><a href="#Sync" data-toggle="tab" aria-expanded="false">Synchronization</a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="col-xs-9">
+                      <!-- Tab panes -->
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="appliances">
+                          <table id="appliancesTable" class="table table-disable-hover  dataTable jambo_table " role="grid">
+                          </table>
+                            <div id="addApp" class="dt-buttons btn-group">
+                              <a class="btn btn-default buttons-html5 btn-sm" tabindex="0" aria-controls="datatable-buttons" href="#"><span>Add</span></a>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="backendMonitor">
+                          <div class="row">
+                            <div class="col-md-5 col-sm-5 col-xs-12">
+                            <div class="x-panel">
+                              <div class="x_title">
+                                <h2>Service Types To Monitor</h2>
+                                <div class="clearfix"></div>
+                              </div>
+                              <table id="serviceTypes" class="table">
+                                <thead/>
+                                <tbody id="serviceType1">
+                                </tbody>
+                              </table>
+                              <!-- <table id="serviceTypes" class="table">
+                                <thead/>
+                                <tbody id="serviceType">
+                                </tbody>
+                              </table> -->
+                              <div class="clearfix"></div>
+                            </div>
+                          </div>
+                          <div class="col-md-5 col-sm-5 col-xs-12">
+                            <div class="x-panel">
+                              <div class="x_title">
+                                <h2>Domains To Monitor</h2>
+                                <div class="clearfix"></div>
+                              </div>
+                              <table id="excludedDomains" class="table">
+                                <thead/>
+                                <tbody id="domain">
+                                </tbody>
+                              </table>
+                              <div class="clearfix"></div>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                        <div class="tab-pane" id="appBackup">
+                          <div class="x-panel">
+                            <div class="x_title">
+                              <h2>Backup store location</h2>
+                              <div class="clearfix"></div>
+                            </div>
+                            <!-- <div class="form-group">
+                            </div> -->
+                            <div class="btn-group">
+                              <button class="btn btn-info" type="button">Local</button>
+                              <button class="btn btn-default" type="button">Remote</button>
+                            </div>
+                            <div class="form-group" style="padding-top: 5px">
+                              <label class="control-label col-md-2 col-sm-2 col-xs-10" style=" padding-top: 7px;" for="appBackup-remoteUrl">
+                                 Remote FTP Site:
+                              </label>
+                              <div class="col-md-9 col-sm-4 col-xs-12">
+                                <input type="text" id="appBackup-remoteUrl" required="required" class="form-control col-md-7 col-xs-12">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tab-pane" id="secureBackup">
+                          <div class="x-panel">
+                            <div class="x_title">
+                              <h2>Backup store location</h2>
+                              <div class="clearfix"></div>
+                            </div>
+                            <!-- <div class="form-group">
+                            </div> -->
+                            <div class="btn-group">
+                              <button class="btn btn-info" type="button">Local</button>
+                              <button class="btn btn-default" type="button">Remote</button>
+                            </div>
+                            <div class="form-group" style="padding-top: 5px">
+                              <label class="control-label col-md-2 col-sm-2 col-xs-10" style=" padding-top: 7px;" for="appBackup-remoteUrl">
+                                 Remote FTP Site:
+                              </label>
+                              <div class="col-md-9 col-sm-4 col-xs-12">
+                                <input type="text" id="appBackup-remoteUrl" required="required" class="form-control col-md-7 col-xs-12">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="tab-pane" id="Sync"></div>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
           <!-- page content -->
           <div class="row">
 
@@ -8,14 +144,26 @@
         </div>
         <!-- /page content -->
 
+    <!-- jQuery -->
+    <script type="text/javascript" src="vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src="vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script type="text/javascript" src="vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script type="text/javascript" src="vendors/nprogress/nprogress.js"></script>
     <!-- Chart.js -->
     <script type="text/javascript" src="vendors/Chart.js/dist/Chart.min.js"></script>
     <!-- gauge.js -->
     <script type="text/javascript" src="vendors/gauge.js/dist/gauge.min.js"></script>
     <!-- bootstrap-progressbar -->
     <script type="text/javascript" src="vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <!-- iCheck -->
+    <script type="text/javascript" src="vendors/iCheck/icheck.min.js"></script>
     <!-- Skycons -->
     <script type="text/javascript" src="vendors/skycons/skycons.js"></script>
+    <!-- Switchery -->
+    <script src="vendors/switchery/dist/switchery.min.js"></script>
     <!-- Flot -->
     <script type="text/javascript" src="vendors/Flot/jquery.flot.js"></script>
     <script type="text/javascript" src="vendors/Flot/jquery.flot.pie.js"></script>
@@ -35,7 +183,159 @@
     <!-- bootstrap-daterangepicker -->
     <script type="text/javascript" src="vendors/moment/min/moment.min.js"></script>
     <script type="text/javascript" src="vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-
+    <!-- Datatables -->
+    <script type="text/javascript" src="vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script type="text/javascript" src="vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
     <!-- Custom Theme Scripts -->
+    <script type="text/javascript" src="js/custom.js"></script>
     <script type="text/javascript" src="js/dpanda.api.js"></script>
     <script type="text/javascript" src="js/dpanda.ui.js"></script>
+
+    <link href="vendors/switchery/dist/switchery.min.css" rel="stylesheet">
+
+    <script>
+
+    function getConfigurationFile(callback){
+      var dpandaGetBackendHealthCheck = '/dpanda/api/getConfig';
+      $.ajax({
+        type: 'GET',
+        url: dpandaGetBackendHealthCheck,
+        dataType: 'json',
+        processData: false,
+        contentType: 'application/json',
+        error: function() {
+          //Handle error
+        },
+        success: function(configurationFile) {
+          callback(configurationFile);
+
+    }
+  });
+}
+  function setAppliancesTable(array){
+    var columns = [
+      {title: "#"},
+      {title : "Host Name"},
+      {title : "Host Ip"},
+      {title : "Monitor"}
+    ]
+
+    var dataSet=[];
+    $.each(array, function(key, val){
+      var items = [];
+      items.push(val.id);
+      items.push(val.hostName);
+      items.push(val.hostIp);
+      items.push(val.monitor);
+      dataSet.push(items)
+    });
+
+      // callback(columns, dataSet);
+      $(document).ready(function() {
+        var table = $('#appliancesTable').DataTable( {
+            data: dataSet,
+            columns: columns,
+            order: [],
+            paging: false,
+            searching: false,
+            info: false,
+            hover: false,
+            columnDefs: [{targets : '_all', orderable: false}]
+          });
+          // return table;
+        });
+  }
+
+  function setBackendMon(array, callback){
+    $.each(array, function(key, val){
+      var tr = document.createElement('tr');
+      var i = document.createElement('input');
+      i.className = 'js-switch';
+      i.type = 'checkbox';
+      i.checked = 'checked';
+      i.id = 'js-switch' + '-serviceType';
+      var thSwitch = document.createElement('th');
+      thSwitch.appendChild(i);
+      tr.id = val.name;
+      $(tr).appendTo("#serviceType1");
+      $('#' + val.name).append('<th>' + val.name + '</th>');
+      $(thSwitch).appendTo('#'+ val.name)
+    });
+
+    callback()
+  }
+
+  function setExcludedDomains(arrayExcDomains, callback){
+    var dpandaApiDomainConfig = "/dpanda/api/config/domain"
+
+    $.ajax({
+      type: 'GET',
+      url: dpandaApiDomainConfig,
+      dataType: 'json',
+      processData: false,
+      contentType: 'application/json',
+      error: function() {
+        //Handle error
+      },
+      success: function(json) {
+        $.each(json.domains, function(key, val){
+          var tr = document.createElement('tr');
+          var i = document.createElement('input');
+          i.className = 'js-switch';
+          i.type = 'checkbox';
+          i.id = 'js-switch' + '-excludeDomain';
+          if (arrayExcDomains.indexOf(val) == -1){i.checked = 'checked';};
+          var thSwitch = document.createElement('th');
+          thSwitch.appendChild(i);
+          tr.id = val;
+          $(tr).appendTo("#domain");
+          $('#' + val).append('<th>' + val + '</th>');
+          $(thSwitch).appendTo('#'+ val)
+        });
+
+        callback();
+
+        }
+      });
+  }
+
+    getConfigurationFile(function(file){
+      var configuration = file;
+
+      setAppliancesTable(configuration.appliances);
+      $( "#addApp" ).click(function() {
+        alert( "Add app BTN has been called." );
+      });
+
+
+      setExcludedDomains(configuration.features.backendMonitor.excludedDomains, function(){
+
+        setBackendMon(configuration.features.backendMonitor.serviceTypes, function(){
+          var switchElem = document.querySelectorAll('#js-switch-serviceType');
+          // console.log(switchElem);
+          $.each(switchElem, function(key, val){
+            var switchery = new Switchery(val, { size: 'small' });
+          });
+        });
+
+        var switchElem = document.querySelectorAll('#js-switch-excludeDomain');
+        // console.log(switchElem);
+        $.each(switchElem, function(key, val){
+          var switchery = new Switchery(val, { size: 'small' });
+        });
+      });
+
+      // setBackups();
+    });
+
+    </script>
