@@ -5,7 +5,7 @@
 		<xsl:variable name="MultiResults">
 			<results mode="attempt-all" multiple-outputs="true">
 				<xsl:for-each select="document('local://dpanda/configuration.jsonx.xml')//*[local-name()='array'][@name='appliances']//*[local-name()='object']">
-					<xsl:if test=".//*[local-name()='string'][@name='monitor']/text()= 'true'">
+					<xsl:if test=".//*[local-name()='boolean'][@name='monitor']/text()= 'true'">
 						<url>https://<xsl:value-of select=".//*[local-name()='string'][@name='hostIp']/text()"/>:<xsl:value-of select="'9080'"/>
 							<xsl:value-of select="substring-before($URI,'?')"/>
 						</url>

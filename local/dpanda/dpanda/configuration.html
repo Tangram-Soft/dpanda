@@ -43,11 +43,69 @@
                       <!-- Tab panes -->
                       <div class="tab-content">
                         <div class="tab-pane active" id="appliances">
+
                           <table id="appliancesTable" class="table table-disable-hover  dataTable jambo_table " role="grid">
                           </table>
                             <div id="addApp" class="dt-buttons btn-group">
-                              <a class="btn btn-default buttons-html5 btn-sm" tabindex="0" aria-controls="datatable-buttons" href="#"><span>Add</span></a>
+                              <button class="btn btn-default buttons-html5 btn-sm" tabindex="0" aria-controls="datatable-buttons" data-toggle="modal" data-target=".bs-addapp-modal-lg">Add</button>
+                              <div class="modal fade bs-addapp-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" style="height: 350px">
+                                  <div class="modal-content" style="height: 325px">
+
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                                      </button>
+                                      <h4 class="modal-title" id="myModalLabel">Add Appliance</h4>
+                                    </div>
+                                    <div class="modal-body" style="height: 200px">
+                                      <div class="form-group" style="padding-top: 5px">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-10" style=" padding-top: 7px;" for="addAppId">
+                                           Appliance Cluster Id:
+                                        </label>
+                                        <div class="col-md-9 col-sm-4 col-xs-6" style="padding-bottom: 10px">
+                                          <!-- <input type="text" id="addAppId" required="required" class="form-control col-md-7 col-xs-12"> -->
+                                          <input id="addAppId" type="text" class="form-control col-md-7 col-xs-12" disabled="disabled">
+                                        </div>
+                                      </div>
+                                      <div class="form-group" style="padding-top: 5px">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-10" style=" padding-top: 7px;" for="addAppName">
+                                           Appliance Name:
+                                        </label>
+                                        <div class="col-md-9 col-sm-4 col-xs-6" style="padding-bottom: 10px">
+                                          <input id="addAppName" type="text" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                      </div>
+                                      <div class="form-group" style="padding-top: 5px">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-10"  for="addMangIp">
+                                           Appliance Managmant IP:
+                                        </label>
+                                        <div class="col-md-9 col-sm-4 col-xs-6" style="padding-bottom: 10px">
+                                          <input id="addMangIp" type="text" class="form-control col-md-7 col-xs-12">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group" style="padding-top: 5px">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-10"  for="addMangIp">
+                                           To Monitor ?
+                                        </label>
+                                        <div class="col-md-9 col-sm-4 col-xs-6" style="padding-bottom: 10px">
+                                            <input id="toMonitor" type="checkbox" class="flat" checked="checked" style="position: absolute; opacity: 0;">
+                                        </div>
+                                      </div>
+
+                                    </div>
+
+
+                                    <div class="form-group" style="position: relative; padding-left: 25px;">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                      <button id="addAppliance" type="button" class="btn btn-success" data-dismiss="modal">Add</button>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
                             </div>
+
                         </div>
                         <div class="tab-pane" id="backendMonitor">
                           <div class="row">
@@ -62,11 +120,6 @@
                                 <tbody id="serviceType1">
                                 </tbody>
                               </table>
-                              <!-- <table id="serviceTypes" class="table">
-                                <thead/>
-                                <tbody id="serviceType">
-                                </tbody>
-                              </table> -->
                               <div class="clearfix"></div>
                             </div>
                           </div>
@@ -196,20 +249,49 @@
     <script type="text/javascript" src="vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
     <script type="text/javascript" src="vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+
+    <script src="vendors/pnotify/dist/pnotify.js"></script>
+    <script src="vendors/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="vendors/pnotify/dist/pnotify.nonblock.js"></script>
     <!-- Custom Theme Scripts -->
     <script type="text/javascript" src="js/custom.js"></script>
     <script type="text/javascript" src="js/dpanda.api.js"></script>
     <script type="text/javascript" src="js/dpanda.ui.js"></script>
 
     <link href="vendors/switchery/dist/switchery.min.css" rel="stylesheet">
+    <link href="vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 
     <script>
 
+    function setConfigurationFile(json, callback){
+      var dpandaSetJsonxConfiguration = '/dpanda/api/setConfig';
+
+      $.ajax({
+        type: 'POST',
+        url: dpandaSetJsonxConfiguration,
+        data: JSON.stringify(json),
+        dataType: 'json',
+        processData: false,
+        contentType: 'application/json',
+        error: function() {
+          //Handle error
+        },
+        success: function(res) {
+          console.log(res);
+          callback(res);
+
+        }
+      });
+
+    }
+
     function getConfigurationFile(callback){
-      var dpandaGetBackendHealthCheck = '/dpanda/api/getConfig';
+      var dpandaGetjsonxConfiguration = '/dpanda/api/getConfig?applianceId=all';
       $.ajax({
         type: 'GET',
-        url: dpandaGetBackendHealthCheck,
+        url: dpandaGetjsonxConfiguration,
         dataType: 'json',
         processData: false,
         contentType: 'application/json',
@@ -310,11 +392,47 @@
   }
 
     getConfigurationFile(function(file){
-      var configuration = file;
+      var configuration = file.data[0];
 
       setAppliancesTable(configuration.appliances);
       $( "#addApp" ).click(function() {
-        alert( "Add app BTN has been called." );
+        // alert('blabla');
+        var nextAppId = Number(configuration.appliances[configuration.appliances.length -1].id) + 1;
+        $('#addAppId').attr('placeholder', nextAppId);
+      });
+
+      $( "#addAppliance" ).click(function() {
+        // alert('blabla');
+        var appId = document.getElementById('addAppId').placeholder;
+        var appName = document.getElementById('addAppName').value;
+        var appIp = document.getElementById('addMangIp').value;
+        var toMonitor = $('#toMonitor').prop('checked');
+        var appliance = {
+      		"id": appId,
+      		"hostName": appName,
+      		"hostIp": appIp,
+      		"monitor": toMonitor
+      	}
+
+        configuration.appliances.push(appliance);
+        setConfigurationFile(configuration,function(result){
+          if(result.uploadFileResult == 'succeed'){
+            new PNotify({
+                title: '',
+                text: 'Configuration Saved successfully',
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+          } else {
+            new PNotify({
+                title: 'Failed',
+                text: 'Unable to save configuration',
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+          }
+        });
+
       });
 
 
