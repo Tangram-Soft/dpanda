@@ -10,6 +10,7 @@ var loadGatewayScriptUrl = "../dpanda.ide/transform.js";
 var saveUrl = "api/filestore/file?filename=";
 var runXslUrl = "ide/runXsl";
 var runGatewayScriptUrl = "ide/runGws";
+var getLogsUrl = "api/logs?tid="
 
 window.moveTo(0,0);
 window.resizeTo(screen.width,screen.height);
@@ -154,16 +155,23 @@ $(function() {
 			data: requestEditor.getValue(),
 		}).always(function(response, stat, xhr){
 				$("#dialog").dialog("close");
+
+				var transactionId = "";
 				if (stat == "error")
 				{
 					responseEditor.setValue(response.responseText, 1);
 					responseHeadersEditor.setValue(response.getAllResponseHeaders(), 1);
+					transactionId = response.getResponseHeader("TransactionID");
 				}
 				else
 				{
 					responseEditor.setValue(response, 1);
 					responseHeadersEditor.setValue(xhr.getAllResponseHeaders(), 1);
+					transactionId = xhr.getResponseHeader("TransactionID");
 				}
+
+				$("#response-logs").html("Waiting for logs...");
+				setTimeout(function() { getLogs(transactionId); }, 1000);
 				status(transformationType + " transformation has finished running.");
 			});
 	});
@@ -217,6 +225,42 @@ $(function() {
 		updatedHeaders = updatedHeaders.trim();
 
 		requestHeadersEditor.setValue(updatedHeaders, 1);
+	}
+
+	function getLogs(tid)
+	{
+		if (!$.isNumeric(tid)) { $("#response-logs").html("Logs retrieval failed."); return; }
+		var url = baseUrl + getLogsUrl + tid;
+		$.ajax({
+			url: url,
+			type: "get",
+			contentType: "application/xml",
+			success: function(response){
+				var logsHtml = "<table id='tbl-response-logs'><tr><td>Date Time</td><td>Type</td><td>Class</td><td>Object</td><td>Level</td><td>Transaction Type</td><td>Transaction ID</td><td>GTID</td><td>Client</td><td>Code</td><td>File</td><td>Message</td></tr>";
+				var logs = response.getElementsByTagName("logs")[0].childNodes;
+				for (i = 0; i < logs.length; ++i)
+				{
+					var dateTime = logs[i].getElementsByTagName("date-time")[0].innerHTML;
+					var type = logs[i].getElementsByTagName("type")[0].innerHTML;
+					var cls = logs[i].getElementsByTagName("class")[0].innerHTML;
+					var obj = logs[i].getElementsByTagName("object")[0].innerHTML;
+					var level = logs[i].getElementsByTagName("level")[0].innerHTML;
+					var transactionType = logs[i].getElementsByTagName("transaction-type")[0].innerHTML;
+					var transactionId = logs[i].getElementsByTagName("transaction")[0].innerHTML;
+					var gtid = logs[i].getElementsByTagName("gtid")[0].innerHTML;
+					var client = logs[i].getElementsByTagName("client")[0].innerHTML;
+					var code = logs[i].getElementsByTagName("code")[0].innerHTML;
+					var file = logs[i].getElementsByTagName("file")[0].innerHTML;
+					var message = logs[i].getElementsByTagName("message")[0].innerHTML;
+					logsHtml += "<tr><td>" + dateTime + "</td><td>" + type + "</td><td>" + cls + "</td><td>" + obj + "</td><td>" + level + "</td><td>" + transactionType + "</td><td>" + transactionId + "</td><td>" + gtid + "</td><td>" + client + "</td><td>" + code + "</td><td>" + file + "</td><td>" + message + "</td></tr>";
+					//console.log(logs[i]);
+				}
+				logsHtml += "</table>";
+				$("#response-logs").html(logsHtml);
+
+			},
+			error:function() { status("Transaction logs retrieval failed!"); }
+		});
 	}
 
 	function status(value) { var dt = new Date(); var datetime = pad0(dt.getDate()) + "/" + (pad0(dt.getMonth()+1))  + "/" + dt.getFullYear() + " " + pad0(dt.getHours()) + ":" + pad0(dt.getMinutes()) + ":" + pad0(dt.getSeconds()); $("#status").html(datetime + " - " + value); }

@@ -139,7 +139,7 @@
 
         for (var i = 0; i < node.childNodes.length; ++i) if (node.childNodes[i].nodeName != "#text") html += handleChildNode(node.childNodes[i], path, namespaceHandling);
 
-        html += "<span class=\"text\"><a href=\"javascript:void(0)\" onclick=\"setXPath(" + quot + path + "[normalize-space(.) = '" + node.childNodes[0].nodeValue + "']" + quot + ");\">" + node.childNodes[0].nodeValue + "</a></span>";
+        if (node.childNodes.length > 0) html += "<span class=\"text\"><a href=\"javascript:void(0)\" onclick=\"setXPath(" + quot + path + "[normalize-space(.) = '" + node.childNodes[0].nodeValue + "']" + quot + ");\">" + node.childNodes[0].nodeValue + "</a></span>";
         if (hasChilds) html += "</ul></div>";
         html += "&lt;/<span class=\"element\">" + node.nodeName + "</span>&gt;</li>";
         return html;

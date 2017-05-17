@@ -5,7 +5,8 @@
   extension-element-prefixes="dp">
 
   <xsl:template match="arg">
-    <xsl:variable name="varName" select="concat('var://context/dpanda.api/',@name/text())"/>
+    <xsl:variable name="nameVal"><xsl:value-of select="@name" /></xsl:variable>
+    <xsl:variable name="varName" select="concat('var://context/dpanda.api/',$nameVal)"/>
     <dp:set-variable name="$varName" value="."/>
   </xsl:template>
 </xsl:stylesheet>

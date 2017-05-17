@@ -34,10 +34,12 @@ html, body { height: 100%; padding: 0; margin: 0; font-family: "Monaco","Menlo",
 #request-tools { padding: 10px;  }
 #txt-base64 { height: 100px; width: 185px; }
 #btn-base64-encode.ui-corner-all, #btn-base64-decode.ui-corner-all, #txt-base64.ui-corner-all,
-  #txt-basic-auth-username.ui-corner-all, #txt-basic-auth-password.ui-corner-all, #btn-basic-auth-header.ui-corner-all
+#txt-basic-auth-username.ui-corner-all, #txt-basic-auth-password.ui-corner-all, #btn-basic-auth-header.ui-corner-all
 {
   border-top-left-radius: 6px !important;
   border-top-right-radius: 6px !important;
   border-bottom-left-radius: 6px !important;
   border-bottom-right-radius: 6px !important;
 }
+
+#tbl-response-logs td { white-space: nowrap; }
