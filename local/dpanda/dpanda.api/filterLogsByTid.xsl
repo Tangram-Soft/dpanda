@@ -13,7 +13,7 @@
 	<xsl:template match="/">
 	    <xsl:variable name="tid" select="dp:variable('var://context/dpanda.api/tid')"/>
 	    <logs>
-	    <xsl:for-each select="/*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='response']/*[local-name()='log']/*[local-name()='log-entry'][transaction = $tid]">
+	    <xsl:for-each select="/*[local-name()='log']/*[local-name()='log-entry'][transaction = $tid]">
 	        <xsl:copy-of select="." />
 	    </xsl:for-each>
 	    </logs>
