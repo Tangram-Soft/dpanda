@@ -10,7 +10,8 @@ session.input.readAsJSON (function (readAsJSONError, json) {
     }
     else {
 
-        console.alert("this is a log sample")
+        console.alert("this is a log sample");
+        console.alert("this is another log");
         session.output.write(JSON.stringify({"status": "ok"}));
     }
 });

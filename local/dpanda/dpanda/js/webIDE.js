@@ -21,7 +21,25 @@ $(function() {
 	$('#tester').enhsplitter({minSize: 50, vertical: false, invisible: true, height: "100%"});
 	$("#dialog").dialog({ closeOnEscape: false, autoOpen: false, create: function (event, ui) { $(".ui-widget-header").hide(); } });
 
-	$(".tabs").tabs();
+	$(".tabs").tabs({
+		// This is a bug fix for automatic refreshment of ace editor content on a hidden editors. you may find more details here: https://github.com/ajaxorg/ace/issues/1245
+    activate: function( evt, ui ) {
+				var selectedTab = ui.newTab[0].outerText;
+				switch (selectedTab)
+				{
+					case "Request Body":
+							requestEditor.resize(true);
+						break;
+					case "Response Body":
+								responseEditor.resize(true);
+							break;
+					case "HTTP Headers":
+								requestHeadersEditor.resize(true);
+								responseHeadersEditor.resize(true);
+							break;
+				}
+    }
+	});
 
 	var codeEditor = ace.edit("editor-area");
 	codeEditor.setTheme("ace/theme/twilight");
@@ -253,7 +271,6 @@ $(function() {
 					var file = logs[i].getElementsByTagName("file")[0].innerHTML;
 					var message = logs[i].getElementsByTagName("message")[0].innerHTML;
 					logsHtml += "<tr><td>" + dateTime + "</td><td>" + type + "</td><td>" + cls + "</td><td>" + obj + "</td><td>" + level + "</td><td>" + transactionType + "</td><td>" + transactionId + "</td><td>" + gtid + "</td><td>" + client + "</td><td>" + code + "</td><td>" + file + "</td><td>" + message + "</td></tr>";
-					//console.log(logs[i]);
 				}
 				logsHtml += "</table>";
 				$("#response-logs").html(logsHtml);
